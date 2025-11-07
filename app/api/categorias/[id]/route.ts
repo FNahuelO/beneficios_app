@@ -4,7 +4,7 @@ import { auth } from '@/lib/auth'
 import { categoriaSchema } from '@/lib/validations'
 import { slugify } from '@/lib/utils'
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
 
@@ -12,11 +12,13 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 
+    const { id } = await params
+
     const body = await request.json()
     const validatedData = categoriaSchema.parse(body)
 
     const categoria = await prisma.category.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!categoria) {
@@ -39,7 +41,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 
     const updated = await prisma.category.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         nombre: validatedData.nombre,
         slug: newSlug,
@@ -59,7 +61,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await auth()
 
@@ -67,8 +72,10 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 
+    const { id } = await params
+
     const categoria = await prisma.category.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         _count: {
           select: { benefits: true },
@@ -88,7 +95,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     }
 
     await prisma.category.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return NextResponse.json({ success: true })

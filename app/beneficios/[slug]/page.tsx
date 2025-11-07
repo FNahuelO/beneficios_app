@@ -9,14 +9,16 @@ import Link from 'next/link'
 export const dynamic = 'force-dynamic'
 
 interface BenefitDetailPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export default async function BenefitDetailPage({ params }: BenefitDetailPageProps) {
+  const { slug } = await params
+
   const beneficio = await prisma.benefit.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
     include: { category: true },
   })
 

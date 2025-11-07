@@ -4,7 +4,7 @@ import { auth } from '@/lib/auth'
 import { sendEmail, emailSolicitudAprobada } from '@/lib/email'
 import { RegEstado } from '@prisma/client'
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
 
@@ -12,8 +12,10 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 
+    const { id } = await params
+
     const registrationRequest = await prisma.registrationRequest.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         user: true,
       },
@@ -29,7 +31,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     // Actualizar el estado de la solicitud
     await prisma.registrationRequest.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         estado: RegEstado.APROBADO,
       },

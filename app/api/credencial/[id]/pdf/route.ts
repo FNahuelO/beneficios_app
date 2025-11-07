@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { generateCredentialPDF } from '@/lib/pdf'
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params
+
     const credential = await prisma.credential.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         user: {
           include: {
@@ -31,7 +33,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       estado: credential.estado,
     })
 
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(Buffer.from(pdfBuffer), {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="credencial-${credential.numeroSocio}.pdf"`,

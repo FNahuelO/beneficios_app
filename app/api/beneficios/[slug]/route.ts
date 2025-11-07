@@ -4,10 +4,12 @@ import { auth } from '@/lib/auth'
 import { beneficioSchema } from '@/lib/validations'
 import { slugify } from '@/lib/utils'
 
-export async function GET(request: NextRequest, { params }: { params: { slug: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
+    const { slug } = await params
+
     const beneficio = await prisma.benefit.findUnique({
-      where: { slug: params.slug },
+      where: { slug },
       include: {
         category: true,
       },
@@ -24,7 +26,7 @@ export async function GET(request: NextRequest, { params }: { params: { slug: st
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { slug: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const session = await auth()
 
@@ -32,11 +34,13 @@ export async function PUT(request: NextRequest, { params }: { params: { slug: st
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 
+    const { slug } = await params
+
     const body = await request.json()
     const validatedData = beneficioSchema.parse(body)
 
     const beneficio = await prisma.benefit.findUnique({
-      where: { slug: params.slug },
+      where: { slug },
     })
 
     if (!beneficio) {
@@ -46,7 +50,7 @@ export async function PUT(request: NextRequest, { params }: { params: { slug: st
     const newSlug = slugify(validatedData.titulo)
 
     // Si el título cambió, verificar que el nuevo slug no exista
-    if (newSlug !== params.slug) {
+    if (newSlug !== slug) {
       const existingBenefit = await prisma.benefit.findUnique({
         where: { slug: newSlug },
       })
@@ -60,7 +64,7 @@ export async function PUT(request: NextRequest, { params }: { params: { slug: st
     }
 
     const updated = await prisma.benefit.update({
-      where: { slug: params.slug },
+      where: { slug },
       data: {
         ...validatedData,
         slug: newSlug,
@@ -86,7 +90,10 @@ export async function PUT(request: NextRequest, { params }: { params: { slug: st
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { slug: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
   try {
     const session = await auth()
 
@@ -94,8 +101,10 @@ export async function DELETE(request: NextRequest, { params }: { params: { slug:
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 
+    const { slug } = await params
+
     const beneficio = await prisma.benefit.findUnique({
-      where: { slug: params.slug },
+      where: { slug },
     })
 
     if (!beneficio) {
@@ -103,7 +112,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { slug:
     }
 
     await prisma.benefit.delete({
-      where: { slug: params.slug },
+      where: { slug },
     })
 
     return NextResponse.json({ success: true })

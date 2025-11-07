@@ -5,7 +5,7 @@ import { sendEmail, emailSolicitudRechazada } from '@/lib/email'
 import { rechazoSchema } from '@/lib/validations'
 import { RegEstado } from '@prisma/client'
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
 
@@ -13,11 +13,13 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 
+    const { id } = await params
+
     const body = await request.json()
     const validatedData = rechazoSchema.parse(body)
 
     const registrationRequest = await prisma.registrationRequest.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         user: true,
       },
@@ -33,7 +35,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     // Actualizar el estado de la solicitud
     await prisma.registrationRequest.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         estado: RegEstado.RECHAZADO,
         comentarioAdmin: validatedData.comentarioAdmin,

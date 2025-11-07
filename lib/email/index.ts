@@ -17,14 +17,19 @@ export async function sendEmail({ to, subject, html }: EmailOptions) {
   }
 
   try {
-    const data = await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: process.env.EMAIL_FROM,
       to,
       subject,
       html,
     })
 
-    return { success: true, messageId: data.id }
+    if (error) {
+      console.error('Error enviando email:', error)
+      return { success: false, error }
+    }
+
+    return { success: true, messageId: data?.id || 'sent' }
   } catch (error) {
     console.error('Error enviando email:', error)
     return { success: false, error }

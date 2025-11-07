@@ -25,24 +25,24 @@ export async function generateCredentialPDF(data: CredentialData): Promise<Buffe
   doc.setFontSize(12)
   doc.setTextColor(0, 0, 0)
   doc.text('Nombre Completo:', 20, 50)
-  doc.setFont(undefined, 'bold')
+  doc.setFont('helvetica', 'bold')
   doc.text(data.nombreCompleto, 20, 57)
 
-  doc.setFont(undefined, 'normal')
+  doc.setFont('helvetica', 'normal')
   doc.text('Documento:', 20, 70)
-  doc.setFont(undefined, 'bold')
+  doc.setFont('helvetica', 'bold')
   doc.text(data.documento, 20, 77)
 
   if (data.numeroSocio) {
-    doc.setFont(undefined, 'normal')
+    doc.setFont('helvetica', 'normal')
     doc.text('Número de Socio:', 20, 90)
-    doc.setFont(undefined, 'bold')
+    doc.setFont('helvetica', 'bold')
     doc.text(data.numeroSocio, 20, 97)
   }
 
-  doc.setFont(undefined, 'normal')
+  doc.setFont('helvetica', 'normal')
   doc.text('Estado:', 20, 110)
-  doc.setFont(undefined, 'bold')
+  doc.setFont('helvetica', 'bold')
 
   if (data.estado === 'APROBADO') {
     doc.setTextColor(16, 185, 129)

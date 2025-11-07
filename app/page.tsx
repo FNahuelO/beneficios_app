@@ -43,10 +43,7 @@ export default async function HomePage() {
     <div className="flex flex-col">
       {/* Hero Section - Inspirado en Boca Juniors */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-white">
-        <div
-          className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMzAgMzBsMzAgMzBIMGwzMC0zMHoiIGZpbGw9IiMwMDA"
-          opacity="0.1"
-        />
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMzAgMzBsMzAgMzBIMGwzMC0zMHoiIGZpbGw9IiMwMDA')] opacity-10" />
         <div className="container relative py-20 md:py-32">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="mb-6 text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">

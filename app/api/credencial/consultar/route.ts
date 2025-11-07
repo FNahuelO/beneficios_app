@@ -16,8 +16,11 @@ export async function POST(request: NextRequest) {
         },
       },
       include: {
-        user: true,
-        credential: true,
+        user: {
+          include: {
+            credential: true,
+          },
+        },
       },
     })
 
@@ -33,8 +36,8 @@ export async function POST(request: NextRequest) {
       tipoDocumento: registrationRequest.tipoDocumento,
       documento: registrationRequest.documento,
       estado: registrationRequest.estado,
-      numeroSocio: registrationRequest.credential?.numeroSocio || null,
-      credentialId: registrationRequest.credential?.id || null,
+      numeroSocio: registrationRequest.user.credential?.numeroSocio || null,
+      credentialId: registrationRequest.user.credential?.id || null,
       fechaAlta: registrationRequest.createdAt,
       comentarioAdmin: registrationRequest.comentarioAdmin,
     })

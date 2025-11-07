@@ -4,7 +4,7 @@ import { z } from 'zod'
 export const registroSchema = z.object({
   nombreCompleto: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
   tipoDocumento: z.enum(['DNI', 'CUIT'], {
-    required_error: 'Debe seleccionar un tipo de documento',
+    message: 'Debe seleccionar un tipo de documento',
   }),
   documento: z.string().min(7, 'Documento inválido').max(11, 'Documento inválido'),
   telefono: z.string().min(8, 'Teléfono inválido'),

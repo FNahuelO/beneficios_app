@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String                @id @default(cuid())
+  email         String                @unique
+  passwordHash  String
+  role          Role                  @default(USER)
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  registration  RegistrationRequest?
+  credential    Credential?
+}
+
+model RegistrationRequest {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nombreCompleto  String
+  tipoDocumento   String    // "DNI" | "CUIT"
+  documento       String    @unique
+  telefono        String
+  domicilio       String
+  ciudad          String
+  provincia       String
+  pais            String
+  estado          RegEstado @default(PENDIENTE)
+  comentarioAdmin String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Credential {
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  numeroSocio String?   @unique
+  estado      RegEstado @default(PENDIENTE) // espejo de la solicitud
+  qrPayload   String?   // opcional para generar QR/Barcode
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  nombre   String
+  slug     String    @unique
+  orden    Int       @default(0)
+  benefits Benefit[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Benefit {
+  id          String    @id @default(cuid())
+  titulo      String
+  slug        String    @unique
+  descripcion String    @db.Text
+  imagenUrl   String?
+  icono       String?
+  destacado   Boolean   @default(false)
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  howToUse    String?   @db.Text // texto rico
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Settings {
+  id                 String   @id @default("singleton")
+  telefonoPrincipal  String?
+  mensajeInformativo String?  @db.Text
+  nombreOrganizacion String?  @default("Mi Organización")
+  logoUrl            String?
+  updatedAt          DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  COORDINATOR
+  USER
+}
+
+enum RegEstado {
+  PENDIENTE
+  APROBADO
+  RECHAZADO
+}

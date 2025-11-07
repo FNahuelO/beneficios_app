@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: beneficios_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: beneficios_user
+      POSTGRES_PASSWORD: beneficios_pass
+      POSTGRES_DB: beneficios_db
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U beneficios_user -d beneficios_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local

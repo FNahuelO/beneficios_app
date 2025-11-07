@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
 
       if (format === 'csv') {
         const csv = exportToCSV(data, Object.keys(data[0] || {}))
-        return new NextResponse(csv, {
+        return new NextResponse(Buffer.from(csv), {
           headers: {
             'Content-Type': 'text/csv',
             'Content-Disposition': `attachment; filename="registros-${new Date().toISOString()}.csv"`,
@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
         })
       } else {
         const xlsx = exportToExcel(data, 'Registros')
-        return new NextResponse(xlsx, {
+        return new NextResponse(Buffer.from(xlsx), {
           headers: {
             'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'Content-Disposition': `attachment; filename="registros-${new Date().toISOString()}.xlsx"`,

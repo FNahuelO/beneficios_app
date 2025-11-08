@@ -82,7 +82,7 @@ export function AdminSidebar() {
           <p className="font-medium">{session?.user?.email}</p>
           <p className="text-xs text-muted-foreground">{session?.user?.role}</p>
         </div>
-        <Button variant="outline" className="w-full" onClick={() => signOut({ callbackUrl: '/' })}>
+        <Button variant="outline" className="w-full" onClick={() => signOut({ redirectTo: '/' })}>
           <LogOut className="mr-2 h-4 w-4" />
           Cerrar Sesión
         </Button>

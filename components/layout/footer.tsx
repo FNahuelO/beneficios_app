@@ -90,8 +90,16 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} Beneficios. Todos los derechos reservados.</p>
+        <div className="mt-8 border-t pt-8">
+          <div className="flex flex-col items-center justify-between gap-4 text-center text-sm text-muted-foreground sm:flex-row">
+            <p>© {new Date().getFullYear()} Beneficios. Todos los derechos reservados.</p>
+            <Link
+              href="/login"
+              className="text-xs text-muted-foreground/70 hover:text-foreground transition-colors"
+            >
+              Acceso personal
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

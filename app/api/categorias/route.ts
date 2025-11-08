@@ -49,6 +49,11 @@ export async function POST(request: NextRequest) {
         slug,
         orden: validatedData.orden,
       },
+      include: {
+        _count: {
+          select: { benefits: true },
+        },
+      },
     })
 
     return NextResponse.json(categoria, { status: 201 })

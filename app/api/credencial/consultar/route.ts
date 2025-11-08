@@ -36,8 +36,8 @@ export async function POST(request: NextRequest) {
       tipoDocumento: registrationRequest.tipoDocumento,
       documento: registrationRequest.documento,
       estado: registrationRequest.estado,
-      numeroSocio: registrationRequest.user.credential?.numeroSocio || null,
-      credentialId: registrationRequest.user.credential?.id || null,
+      numeroSocio: registrationRequest.user?.credential?.numeroSocio || null,
+      credentialId: registrationRequest.user?.credential?.id || null,
       fechaAlta: registrationRequest.createdAt,
       comentarioAdmin: registrationRequest.comentarioAdmin,
     })

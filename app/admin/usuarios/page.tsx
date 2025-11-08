@@ -48,7 +48,7 @@ export default function UsuariosAdminPage() {
     setLoading(true)
     try {
       const params = new URLSearchParams()
-      if (filtroEstado) params.append('estado', filtroEstado)
+      if (filtroEstado) params.append('estado', filtroEstado !== 'all' ? filtroEstado : '')
       if (search) params.append('search', search)
 
       const response = await fetch(`/api/admin/registro?${params}`)
@@ -211,7 +211,7 @@ export default function UsuariosAdminPage() {
                 <SelectValue placeholder="Todos los estados" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Todos</SelectItem>
+                <SelectItem value="all">Todos</SelectItem>
                 <SelectItem value="PENDIENTE">Pendiente</SelectItem>
                 <SelectItem value="APROBADO">Aprobado</SelectItem>
                 <SelectItem value="RECHAZADO">Rechazado</SelectItem>

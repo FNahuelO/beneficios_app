@@ -10,19 +10,55 @@ import {
 } from '@/components/ui/table'
 import { Gift, Users, Clock, CheckCircle, XCircle } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
+import { prisma } from '@/lib/prisma'
+import { RegEstado } from '@prisma/client'
+import { auth } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 
 async function getStats() {
-  const response = await fetch(`${process.env.NEXTAUTH_URL}/api/admin/stats`, {
-    cache: 'no-store',
-  })
+  const session = await auth()
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch stats')
+  if (!session?.user || !['ADMIN', 'COORDINATOR'].includes(session.user.role)) {
+    redirect('/login')
   }
 
-  return response.json()
+  const [totalBeneficios, totalRegistros, pendientes, aprobados, rechazados, ultimosPendientes] =
+    await Promise.all([
+      prisma.benefit.count(),
+      prisma.registrationRequest.count(),
+      prisma.registrationRequest.count({
+        where: { estado: RegEstado.PENDIENTE },
+      }),
+      prisma.registrationRequest.count({
+        where: { estado: RegEstado.APROBADO },
+      }),
+      prisma.registrationRequest.count({
+        where: { estado: RegEstado.RECHAZADO },
+      }),
+      prisma.registrationRequest.findMany({
+        where: { estado: RegEstado.PENDIENTE },
+        include: {
+          user: {
+            select: { email: true },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 10,
+      }),
+    ])
+
+  return {
+    stats: {
+      totalBeneficios,
+      totalRegistros,
+      pendientes,
+      aprobados,
+      rechazados,
+    },
+    ultimosPendientes,
+  }
 }
 
 export default async function AdminDashboard() {

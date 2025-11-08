@@ -4,6 +4,30 @@ import { auth } from '@/lib/auth'
 import { categoriaSchema } from '@/lib/validations'
 import { slugify } from '@/lib/utils'
 
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const { id } = await params
+
+    const categoria = await prisma.category.findUnique({
+      where: { id },
+      include: {
+        _count: {
+          select: { benefits: true },
+        },
+      },
+    })
+
+    if (!categoria) {
+      return NextResponse.json({ error: 'Categoría no encontrada' }, { status: 404 })
+    }
+
+    return NextResponse.json(categoria)
+  } catch (error) {
+    console.error('Error fetching categoria:', error)
+    return NextResponse.json({ error: 'Error al obtener categoría' }, { status: 500 })
+  }
+}
+
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth()
@@ -27,6 +51,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
     const newSlug = slugify(validatedData.nombre)
 
+    // Si el nombre cambió, verificar que el nuevo slug no exista
     if (newSlug !== categoria.slug) {
       const existingCategory = await prisma.category.findUnique({
         where: { slug: newSlug },
@@ -46,6 +71,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         nombre: validatedData.nombre,
         slug: newSlug,
         orden: validatedData.orden,
+      },
+      include: {
+        _count: {
+          select: { benefits: true },
+        },
       },
     })
 
@@ -76,29 +106,18 @@ export async function DELETE(
 
     const categoria = await prisma.category.findUnique({
       where: { id },
-      include: {
-        _count: {
-          select: { benefits: true },
-        },
-      },
     })
 
     if (!categoria) {
       return NextResponse.json({ error: 'Categoría no encontrada' }, { status: 404 })
     }
 
-    if (categoria._count.benefits > 0) {
-      return NextResponse.json(
-        { error: 'No se puede eliminar una categoría con beneficios asociados' },
-        { status: 400 }
-      )
-    }
-
+    // Eliminar la categoría (los beneficios asociados quedarán con categoryId null)
     await prisma.category.delete({
       where: { id },
     })
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ message: 'Categoría eliminada exitosamente' })
   } catch (error) {
     console.error('Error deleting categoria:', error)
     return NextResponse.json({ error: 'Error al eliminar categoría' }, { status: 500 })

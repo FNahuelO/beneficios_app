@@ -19,7 +19,7 @@ export function Navbar() {
   ]
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container flex h-16 items-center">
         <div className="mr-8 flex items-center">
           <Link href="/" className="flex items-center space-x-2">
@@ -51,12 +51,6 @@ export function Navbar() {
             <Button variant="outline" asChild>
               <Link href="/registro">Registrarse</Link>
             </Button>
-            <Button asChild>
-              <Link href="/login">
-                <User className="mr-2 h-4 w-4" />
-                Ingresar
-              </Link>
-            </Button>
           </div>
         </div>
 
@@ -86,9 +80,6 @@ export function Navbar() {
             <div className="mt-4 space-y-2 px-4">
               <Button variant="outline" className="w-full" asChild>
                 <Link href="/registro">Registrarse</Link>
-              </Button>
-              <Button className="w-full" asChild>
-                <Link href="/login">Ingresar</Link>
               </Button>
             </div>
           </nav>

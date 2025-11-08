@@ -14,19 +14,19 @@ import { Search } from 'lucide-react'
 export const dynamic = 'force-dynamic'
 
 interface BeneficiosPageProps {
-  searchParams: {
+  searchParams: Promise<{
     search?: string
     categoria?: string
     destacado?: string
     page?: string
-  }
+  }>
 }
 
 export default async function BeneficiosPage({ searchParams }: BeneficiosPageProps) {
-  const search = searchParams.search || ''
-  const categoria = searchParams.categoria || ''
-  const destacado = searchParams.destacado
-  const page = parseInt(searchParams.page || '1')
+  const search = (await searchParams).search || ''
+  const categoria = (await searchParams).categoria || ''
+  const destacado = (await searchParams).destacado || ''
+  const page = parseInt((await searchParams).page || '1')
   const limit = 12
 
   // Construir filtros
@@ -82,7 +82,7 @@ export default async function BeneficiosPage({ searchParams }: BeneficiosPagePro
             <SelectValue placeholder="Todas las categorías" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todas las categorías</SelectItem>
+            <SelectItem value="all">Todas las categorías</SelectItem>
             {categorias.map((cat) => (
               <SelectItem key={cat.id} value={cat.slug}>
                 {cat.nombre}
@@ -96,7 +96,7 @@ export default async function BeneficiosPage({ searchParams }: BeneficiosPagePro
             <SelectValue placeholder="Todos los beneficios" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todos</SelectItem>
+            <SelectItem value="all">Todos</SelectItem>
             <SelectItem value="true">Solo destacados</SelectItem>
             <SelectItem value="false">No destacados</SelectItem>
           </SelectContent>

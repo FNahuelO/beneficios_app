@@ -5,7 +5,7 @@ import './globals.css'
 import { Navbar } from '@/components/layout/navbar'
 import { Footer } from '@/components/layout/footer'
 import { Toaster } from '@/components/ui/toaster'
-import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -22,16 +22,17 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const session = await auth()
-  const isLoggedIn = !!session?.user
+  const headersList = await headers()
+  const pathname = headersList.get('x-pathname') || ''
+  const isAdminRoute = pathname.startsWith('/admin')
 
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`} suppressHydrationWarning>
         <div className="flex min-h-screen flex-col">
-          {!isLoggedIn && <Navbar />}
+          {!isAdminRoute && <Navbar />}
           <main className="flex-1">{children}</main>
-          {!isLoggedIn && <Footer />}
+          {!isAdminRoute && <Footer />}
         </div>
         <Toaster />
       </body>

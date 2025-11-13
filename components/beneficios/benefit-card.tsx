@@ -21,14 +21,14 @@ export function BenefitCard({ benefit }: BenefitCardProps) {
               alt={benefit.titulo}
               className="h-full w-full object-cover transition-transform group-hover:scale-105"
             />
-            {benefit.destacado && (
+            {/* {benefit.destacado && (
               <div className="absolute right-2 top-2">
-                <Badge variant="default" className="gap-1">
+                <Badge variant="default" className="gap-1 bg-[#00438A] text-white">
                   <Star className="h-3 w-3 fill-current" />
                   Destacado
                 </Badge>
               </div>
-            )}
+            )} */}
           </div>
         )}
         <CardHeader>
@@ -36,7 +36,7 @@ export function BenefitCard({ benefit }: BenefitCardProps) {
             <CardTitle className="line-clamp-2 text-lg">{benefit.titulo}</CardTitle>
           </div>
           {benefit.category && (
-            <Badge variant="outline" className="w-fit">
+            <Badge variant="outline" className="w-fit bg-[#00438A] text-white">
               {benefit.category.nombre}
             </Badge>
           )}

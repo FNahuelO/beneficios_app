@@ -127,127 +127,163 @@ export default function CredencialPage() {
   }
 
   return (
-    <div className="container max-w-4xl py-12">
-      <div className="mb-8 text-center">
-        <CreditCard className="mx-auto mb-4 h-16 w-16 text-primary" />
-        <h1 className="mb-2 text-4xl font-bold tracking-tight">Consultar Credencial</h1>
-        <p className="text-muted-foreground">
-          Ingresá tu documento y email para ver tu credencial digital
-        </p>
-      </div>
+    <div className="min-h-screen bg-[#00438A] py-12 px-4 flex flex-col items-center justify-center">
+      <div className="container max-w-4xl mx-auto">
+        {/* Título principal */}
+        <div className="mb-12 text-center">
+          <h1 className="mb-4 text-4xl md:text-5xl font-bold tracking-tight text-white">
+            Consultar credencial
+          </h1>
+          <p className="text-lg md:text-xl text-white/90">
+            Consulta tu credencial y descubrí todos los descuentos disponibles
+          </p>
+        </div>
 
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Datos de Consulta</CardTitle>
-          <CardDescription>Ingresá los datos que utilizaste al registrarte</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="documento">DNI / CUIT</Label>
-                <Input id="documento" placeholder="12345678" {...register('documento')} />
-                {errors.documento && (
-                  <p className="text-sm text-destructive">{errors.documento.message}</p>
-                )}
-              </div>
+        {/* Card del formulario */}
+        <Card className="mb-8 bg-[#8DB1FF26] border border-t-0 border-[#8DB1FF] shadow-xl relative ">
+          <div className="absolute top-0 left-0 right-0 h-2 bg-[#F3B229] rounded-t-lg" />
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="tu@email.com" {...register('email')} />
-                {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
-              </div>
-            </div>
-
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Consultando...' : 'Consultar Credencial'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-
-      {error && (
-        <Alert variant="destructive" className="mb-8">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
-      {credential && (
-        <Card>
           <CardHeader>
-            <div className="flex items-start justify-between">
-              <div>
-                <CardTitle className="text-2xl">Tu Credencial</CardTitle>
-                <CardDescription>Información de tu registro</CardDescription>
-              </div>
-              {getEstadoBadge(credential.estado)}
-            </div>
+            <CardTitle className="text-white text-2xl">Datos de Consulta</CardTitle>
+            <CardDescription className="text-white/80 text-base">
+              Ingresá los datos que utilizaste al registrarte
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Nombre Completo</p>
-                <p className="text-lg font-semibold">{credential.nombreCompleto}</p>
+          <CardContent className="px-0">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div className="grid gap-6 sm:grid-cols-2 px-6">
+                <div className="space-y-2">
+                  <Label htmlFor="documento" className="text-white text-base">
+                    DNI/CUIT
+                  </Label>
+                  <Input
+                    id="documento"
+                    placeholder="12345678"
+                    className="bg-white h-12"
+                    {...register('documento')}
+                  />
+                  {errors.documento && (
+                    <p className="text-sm text-red-300">{errors.documento.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-white text-base">
+                    Email
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="tu@email.com"
+                    className="bg-white h-12"
+                    {...register('email')}
+                  />
+                  {errors.email && <p className="text-sm text-red-300">{errors.email.message}</p>}
+                </div>
               </div>
 
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Documento</p>
-                <p className="text-lg font-semibold">
-                  {credential.tipoDocumento}: {credential.documento}
-                </p>
+              <div className="flex justify-center w-full border-t px-6 pt-6">
+                <Button
+                  type="submit"
+                  className="w-full bg-[#F3B229] text-white hover:bg-[#F3B229]/90 font-bold py-6 text-lg rounded-2xl"
+                  disabled={loading}
+                >
+                  {loading ? 'Consultando...' : 'Consultar Credencial'}
+                </Button>
               </div>
+            </form>
+          </CardContent>
+        </Card>
 
-              {credential.numeroSocio && (
+        {error && (
+          <Alert variant="destructive" className="mb-8 bg-red-500/20 border-red-500">
+            <AlertCircle className="h-4 w-4 text-white" />
+            <AlertDescription className="text-white">{error}</AlertDescription>
+          </Alert>
+        )}
+
+        {credential && (
+          <Card className="bg-[#1a4d7a] border-none shadow-xl">
+            <CardHeader>
+              <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Número de Socio</p>
-                  <p className="text-lg font-semibold">{credential.numeroSocio}</p>
+                  <CardTitle className="text-2xl text-white">Tu Credencial</CardTitle>
+                  <CardDescription className="text-white/80">
+                    Información de tu registro
+                  </CardDescription>
+                </div>
+                {getEstadoBadge(credential.estado)}
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <p className="text-sm font-medium text-white/70">Nombre Completo</p>
+                  <p className="text-lg font-semibold text-white">{credential.nombreCompleto}</p>
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium text-white/70">Documento</p>
+                  <p className="text-lg font-semibold text-white">
+                    {credential.tipoDocumento}: {credential.documento}
+                  </p>
+                </div>
+
+                {credential.numeroSocio && (
+                  <div>
+                    <p className="text-sm font-medium text-white/70">Número de Socio</p>
+                    <p className="text-lg font-semibold text-white">{credential.numeroSocio}</p>
+                  </div>
+                )}
+
+                <div>
+                  <p className="text-sm font-medium text-white/70">Fecha de Alta</p>
+                  <p className="text-lg font-semibold text-white">
+                    {formatDate(credential.fechaAlta)}
+                  </p>
+                </div>
+              </div>
+
+              {credential.estado === 'APROBADO' && credential.credentialId && (
+                <div className="rounded-lg border border-white/20 bg-white/10 p-6">
+                  <div className="mb-4 flex items-center justify-between">
+                    <div>
+                      <h3 className="font-semibold text-white">Credencial Digital</h3>
+                      <p className="text-sm text-white/80">Tu credencial está lista para usar</p>
+                    </div>
+                    <Button
+                      onClick={handleDownloadPDF}
+                      className="bg-[#F3B229] text-white hover:bg-[#F3B229]/90 font-bold rounded-xl"
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      Descargar PDF
+                    </Button>
+                  </div>
                 </div>
               )}
 
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Fecha de Alta</p>
-                <p className="text-lg font-semibold">{formatDate(credential.fechaAlta)}</p>
-              </div>
-            </div>
+              {credential.estado === 'PENDIENTE' && (
+                <Alert className="bg-yellow-500/20 border-yellow-500">
+                  <Clock className="h-4 w-4 text-white" />
+                  <AlertDescription className="text-white">
+                    Tu solicitud está siendo revisada. Te notificaremos por email cuando sea
+                    aprobada.
+                  </AlertDescription>
+                </Alert>
+              )}
 
-            {credential.estado === 'APROBADO' && credential.credentialId && (
-              <div className="rounded-lg border bg-muted/50 p-6">
-                <div className="mb-4 flex items-center justify-between">
-                  <div>
-                    <h3 className="font-semibold">Credencial Digital</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Tu credencial está lista para usar
-                    </p>
-                  </div>
-                  <Button onClick={handleDownloadPDF}>
-                    <Download className="mr-2 h-4 w-4" />
-                    Descargar PDF
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {credential.estado === 'PENDIENTE' && (
-              <Alert>
-                <Clock className="h-4 w-4" />
-                <AlertDescription>
-                  Tu solicitud está siendo revisada. Te notificaremos por email cuando sea aprobada.
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {credential.estado === 'RECHAZADO' && credential.comentarioAdmin && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  <strong>Motivo del rechazo:</strong> {credential.comentarioAdmin}
-                </AlertDescription>
-              </Alert>
-            )}
-          </CardContent>
-        </Card>
-      )}
+              {credential.estado === 'RECHAZADO' && credential.comentarioAdmin && (
+                <Alert variant="destructive" className="bg-red-500/20 border-red-500">
+                  <AlertCircle className="h-4 w-4 text-white" />
+                  <AlertDescription className="text-white">
+                    <strong>Motivo del rechazo:</strong> {credential.comentarioAdmin}
+                  </AlertDescription>
+                </Alert>
+              )}
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   )
 }

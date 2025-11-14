@@ -6,13 +6,6 @@ const config: Config = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  theme: {
-    extend: {
-      screens: {
-        xs: { max: '379.98px' },
-      },
-    },
-  },
 }
 
 export default config

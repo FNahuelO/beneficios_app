@@ -70,7 +70,7 @@ export default async function TelemedicinaPage() {
         </div>
 
         {/* Contacto */}
-        <div className="rounded-lg bg-[#103F79] p-8 mb-8 border border-[#4A608F] px-36 py-8 text-center xs:p-6">
+        <div className="rounded-lg bg-[#103F79] p-8 mb-8 border border-[#4A608F] px-36 py-8 text-center max-sm:px-6">
           <h2 className="mb-3 text-2xl font-semibold">Contacto de Telemedicina</h2>
           <p className="mb-6 text-gray-200">{mensaje}</p>
 
@@ -82,17 +82,17 @@ export default async function TelemedicinaPage() {
               <p className="mb-2 text-sm text-gray-300">Número de contacto</p>
               <p className="mb-6 text-3xl font-bold">{telefono}</p>
 
-              <div className="flex flex-col gap-3 sm:flex-row xs:justify-center xs:flex-row xs:w-full">
+              <div className="flex not-sm:flex-col gap-3 sm:flex-row justify-center not-sm:w-full">
                 <Button
                   size="lg"
-                  className="bg-[#F3B229] text-white hover:bg-[#F3B229]/90 font-semibold rounded-2xl w-1/4 xs:w-1/2"
+                  className="bg-[#F3B229] text-white hover:bg-[#F3B229]/90 font-semibold rounded-2xl lg:w-1/4 "
                   asChild
                 >
                   <a href={telefonoLink}>Llamar</a>
                 </Button>
                 <Button
                   size="lg"
-                  className="bg-[#00438A] text-white hover:bg-[#00438A]/90 font-semibold rounded-2xl w-1/4 xs:w-1/2"
+                  className="bg-[#00438A] text-white hover:bg-[#00438A]/90 font-semibold rounded-2xl lg:w-1/4 "
                   asChild
                 >
                   <a

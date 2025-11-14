@@ -102,15 +102,6 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <div className="mt-6 text-center text-sm">
-            <p className="text-muted-foreground">
-              ¿No tenés cuenta?{' '}
-              <Link href="/registro" className="text-primary hover:underline">
-                Registrate aquí
-              </Link>
-            </p>
-          </div>
-
           <div className="mt-4 rounded-lg bg-muted p-4 text-xs">
             <p className="font-semibold">Credenciales de prueba:</p>
             <p className="mt-1">Admin: admin@demo.com / admin123</p>

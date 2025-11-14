@@ -14,6 +14,7 @@ import { prisma } from '@/lib/prisma'
 import { RegEstado } from '@prisma/client'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
+import { LogoutButton } from '@/components/admin/logout-button'
 
 export const dynamic = 'force-dynamic'
 
@@ -99,9 +100,12 @@ export default async function AdminDashboard() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="mb-2 text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">Bienvenido al panel administrativo</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="mb-2 text-3xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-muted-foreground">Bienvenido al panel administrativo</p>
+        </div>
+        <LogoutButton />
       </div>
 
       {/* KPIs */}

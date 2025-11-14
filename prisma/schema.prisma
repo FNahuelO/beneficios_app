@@ -94,4 +94,5 @@ enum RegEstado {
   PENDIENTE
   APROBADO
   RECHAZADO
+  INHABILITADO
 }

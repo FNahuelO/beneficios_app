@@ -19,7 +19,7 @@ interface CredentialData {
   nombreCompleto: string
   tipoDocumento: string
   documento: string
-  estado: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO'
+  estado: 'PENDIENTE' | 'APROBADO' | 'RECHAZADO' | 'INHABILITADO'
   numeroSocio: string | null
   credentialId: string | null
   fechaAlta: string
@@ -167,6 +167,13 @@ export default function CredencialPage() {
           <Badge variant="destructive" className="gap-1">
             <AlertCircle className="h-3 w-3" />
             Rechazado
+          </Badge>
+        )
+      case 'INHABILITADO':
+        return (
+          <Badge variant="outline" className="gap-1 border-orange-500 text-orange-600">
+            <AlertCircle className="h-3 w-3" />
+            Inhabilitado
           </Badge>
         )
       default:
@@ -325,6 +332,16 @@ export default function CredencialPage() {
                   <AlertCircle className="h-4 w-4 text-white" />
                   <AlertDescription className="text-white">
                     <strong>Motivo del rechazo:</strong> {credential.comentarioAdmin}
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {credential.estado === 'INHABILITADO' && (
+                <Alert className="bg-orange-500/20 border-orange-500">
+                  <AlertCircle className="h-4 w-4 text-white" />
+                  <AlertDescription className="text-white">
+                    Tu credencial ha sido inhabilitada. Contactá con el administrador para más
+                    información.
                   </AlertDescription>
                 </Alert>
               )}

@@ -263,6 +263,12 @@ export default function UsuariosAdminPage() {
         return <Badge variant="secondary">Pendiente</Badge>
       case 'RECHAZADO':
         return <Badge variant="destructive">Rechazado</Badge>
+      case 'INHABILITADO':
+        return (
+          <Badge variant="outline" className="border-orange-500 text-orange-600">
+            Inhabilitado
+          </Badge>
+        )
       default:
         return null
     }
@@ -312,6 +318,7 @@ export default function UsuariosAdminPage() {
                 <SelectItem value="all">Todos</SelectItem>
                 <SelectItem value="PENDIENTE">Pendiente</SelectItem>
                 <SelectItem value="APROBADO">Aprobado</SelectItem>
+                <SelectItem value="INHABILITADO">Inhabilitado</SelectItem>
                 <SelectItem value="RECHAZADO">Rechazado</SelectItem>
               </SelectContent>
             </Select>
@@ -377,7 +384,7 @@ export default function UsuariosAdminPage() {
                           </Button>
                         </div>
                       )}
-                      {(registro.estado === 'APROBADO' || registro.estado === 'RECHAZADO') && (
+                      {(registro.estado === 'APROBADO' || registro.estado === 'INHABILITADO') && (
                         <div className="flex items-center gap-2">
                           {registro.estado === 'APROBADO' && (
                             <>

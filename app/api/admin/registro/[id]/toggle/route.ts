@@ -24,9 +24,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       return NextResponse.json({ error: 'Solicitud no encontrada' }, { status: 404 })
     }
 
-    // Toggle entre APROBADO y RECHAZADO
+    // Toggle entre APROBADO e INHABILITADO
     const nuevoEstado =
-      registrationRequest.estado === RegEstado.APROBADO ? RegEstado.RECHAZADO : RegEstado.APROBADO
+      registrationRequest.estado === RegEstado.APROBADO
+        ? RegEstado.INHABILITADO
+        : RegEstado.APROBADO
 
     // Actualizar el estado de la solicitud
     await prisma.registrationRequest.update({

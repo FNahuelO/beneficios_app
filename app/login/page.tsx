@@ -63,10 +63,10 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#1e3a8a] py-12 px-4">
-      <div className="flex w-full max-w-5xl overflow-hidden rounded-2xl bg-white shadow-2xl h-[65vh]">
+      <div className="flex w-full max-w-4xl overflow-hidden rounded-2xl bg-[#1e3a8a] shadow-2xl h-[65vh]">
         {/* Sección izquierda con imagen de fondo */}
         <div
-          className="relative hidden w-[50%] bg-cover bg-center bg-no-repeat lg:block"
+          className="relative hidden w-[50%] bg-cover bg-no-repeat lg:block bg-center "
           style={{ backgroundImage: 'url(/login.png)' }}
         ></div>
 

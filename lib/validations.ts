@@ -80,16 +80,40 @@ export const medicalSpecialtySchema = z.object({
 export type MedicalSpecialtyFormData = z.infer<typeof medicalSpecialtySchema>
 
 // Esquema de pago
-export const pagoSchema = z.object({
-  numeroTarjeta: z
-    .string()
-    .min(16, 'El número de tarjeta debe tener 16 dígitos')
-    .max(19, 'Número de tarjeta inválido'),
-  nombreTitular: z.string().min(3, 'El nombre del titular debe tener al menos 3 caracteres'),
-  fechaVencimiento: z.string().regex(/^(0[1-9]|1[0-2])\/\d{2}$/, 'Formato inválido (MM/AA)'),
-  cvv: z.string().min(3, 'CVV inválido').max(4, 'CVV inválido'),
-  registrationId: z.string().min(1, 'ID de registro requerido'),
-  monto: z.number().positive('El monto debe ser mayor a 0').optional().default(0),
-})
+export const pagoSchema = z.preprocess(
+  (data: any) => {
+    if (typeof data === 'object' && data !== null) {
+      return {
+        ...data,
+        monto: data.monto ?? 0,
+      }
+    }
+    return data
+  },
+  z.object({
+    numeroTarjeta: z
+      .string()
+      .min(1, 'El número de tarjeta es requerido')
+      .refine(
+        (val) => {
+          const cleaned = val.replace(/\s/g, '')
+          return cleaned.length >= 16 && cleaned.length <= 19 && /^\d+$/.test(cleaned)
+        },
+        { message: 'El número de tarjeta debe tener entre 16 y 19 dígitos' }
+      ),
+    nombreTitular: z.string().min(3, 'El nombre del titular debe tener al menos 3 caracteres'),
+    fechaVencimiento: z
+      .string()
+      .min(1, 'La fecha de vencimiento es requerida')
+      .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, 'Formato inválido (MM/AA)'),
+    cvv: z
+      .string()
+      .min(3, 'CVV inválido')
+      .max(4, 'CVV inválido')
+      .regex(/^\d+$/, 'CVV debe contener solo números'),
+    registrationId: z.string().min(1, 'ID de registro requerido'),
+    monto: z.number().nonnegative('El monto debe ser mayor o igual a 0'),
+  })
+)
 
 export type PagoFormData = z.infer<typeof pagoSchema>

@@ -53,6 +53,9 @@ export default function RegistroPage() {
     formState: { errors: errorsPago },
   } = useForm<PagoFormData>({
     resolver: zodResolver(pagoSchema),
+    defaultValues: {
+      monto: 0,
+    },
   })
 
   const tipoDocumento = watch('tipoDocumento')

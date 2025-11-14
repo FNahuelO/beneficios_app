@@ -17,32 +17,20 @@ export default async function TelemedicinaPage() {
 
   const telefonoLink = `tel:${telefono.replace(/\s/g, '')}`
 
-  const especialidades = [
-    {
-      nombre: 'Cardiología',
-      imagen: 'https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?w=400&h=400&fit=crop',
-    },
-    {
-      nombre: 'Clínica médica general',
-      imagen: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=400&fit=crop',
-    },
-    {
-      nombre: 'Pediatría',
-      imagen: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop',
-    },
-    {
-      nombre: 'Psicología',
-      imagen: 'https://images.unsplash.com/photo-1573497491208-6b1acb260507?w=400&h=400&fit=crop',
-    },
-    {
-      nombre: 'Dermatología',
-      imagen: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=400&fit=crop',
-    },
-    {
-      nombre: 'Ginecología',
-      imagen: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=400&h=400&fit=crop',
-    },
-  ]
+  // Cargar especialidades desde la base de datos
+  const especialidades = await prisma.medicalSpecialty.findMany({
+    orderBy: { orden: 'asc' },
+  })
+
+  // Mapear especialidades al formato esperado
+  const especialidadesMapeadas = especialidades.map(
+    (esp: { nombre: string; imagenUrl: string | null }) => ({
+      nombre: esp.nombre,
+      imagen:
+        esp.imagenUrl ||
+        'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=400&fit=crop',
+    })
+  )
 
   return (
     <div className="min-h-screen bg-linear-to-br from-[#00438A] to-[#0050A4] text-white">
@@ -136,22 +124,24 @@ export default async function TelemedicinaPage() {
         </div>
 
         {/* Especialidades médicas */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-          {especialidades.map((especialidad) => (
-            <div key={especialidad.nombre} className="text-center bg-white">
-              <div className="relative aspect-video overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-2 bg-[#024D9DB8] z-10" />
-                <Image
-                  src={especialidad?.imagen || ''}
-                  alt={especialidad?.nombre || ''}
-                  fill
-                  className="object-cover"
-                />
+        {especialidadesMapeadas.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            {especialidadesMapeadas.map((especialidad: { nombre: string; imagen: string }) => (
+              <div key={especialidad.nombre} className="text-center bg-white">
+                <div className="relative aspect-video overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-2 bg-[#024D9DB8] z-10" />
+                  <Image
+                    src={especialidad?.imagen || ''}
+                    alt={especialidad?.nombre || ''}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <p className="text-sm font-medium text-[#64749A] p-3">{especialidad.nombre}</p>
               </div>
-              <p className="text-sm font-medium text-[#64749A] p-3">{especialidad.nombre}</p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

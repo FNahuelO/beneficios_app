@@ -2,11 +2,13 @@ import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Star } from 'lucide-react'
-import type { Benefit, Category } from '@prisma/client'
+import type { Benefit, Category, BenefitCategory } from '@prisma/client'
 
 interface BenefitCardProps {
   benefit: Benefit & {
-    category: Category | null
+    categories: (BenefitCategory & {
+      category: Category
+    })[]
   }
 }
 
@@ -35,10 +37,14 @@ export function BenefitCard({ benefit }: BenefitCardProps) {
           <div className="flex items-start justify-between gap-2">
             <CardTitle className="line-clamp-2 text-lg">{benefit.titulo}</CardTitle>
           </div>
-          {benefit.category && (
-            <Badge variant="outline" className="w-fit bg-[#00438A] text-white">
-              {benefit.category.nombre}
-            </Badge>
+          {benefit.categories && benefit.categories.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {benefit.categories.map((bc) => (
+                <Badge key={bc.id} variant="outline" className="w-fit bg-[#00438A] text-white">
+                  {bc.category.nombre}
+                </Badge>
+              ))}
+            </div>
           )}
         </CardHeader>
         <CardContent>

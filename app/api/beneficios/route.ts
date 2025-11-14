@@ -24,7 +24,13 @@ export async function GET(request: NextRequest) {
     }
 
     if (categoria) {
-      where.category = { slug: categoria }
+      where.categories = {
+        some: {
+          category: {
+            slug: categoria,
+          },
+        },
+      }
     }
 
     if (destacado !== null && destacado !== undefined && destacado !== '') {
@@ -35,7 +41,11 @@ export async function GET(request: NextRequest) {
       prisma.benefit.findMany({
         where,
         include: {
-          category: true,
+          categories: {
+            include: {
+              category: true,
+            },
+          },
         },
         orderBy: [{ destacado: 'desc' }, { createdAt: 'desc' }],
         skip,
@@ -68,30 +78,57 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const validatedData = beneficioSchema.parse(body)
 
-    const slug = slugify(validatedData.titulo)
+    // Validar los datos
+    const validationResult = beneficioSchema.safeParse(body)
 
-    // Verificar si ya existe un beneficio con ese slug
-    const existingBenefit = await prisma.benefit.findUnique({
-      where: { slug },
-    })
-
-    if (existingBenefit) {
-      return NextResponse.json({ error: 'Ya existe un beneficio con ese título' }, { status: 400 })
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Datos inválidos',
+          details: validationResult.error.issues,
+        },
+        { status: 400 }
+      )
     }
+
+    const validatedData = validationResult.data
+
+    let slug = slugify(validatedData.titulo)
+    let baseSlug = slug
+
+    // Verificar si ya existe un beneficio con ese slug y generar uno único si es necesario
+    let counter = 1
+    while (await prisma.benefit.findUnique({ where: { slug } })) {
+      slug = `${baseSlug}-${counter}`
+      counter++
+    }
+
+    // Extraer categoryIds y crear el beneficio con las categorías
+    const { categoryIds, ...beneficioData } = validatedData
+    const categoryIdsArray = categoryIds && categoryIds.length > 0 ? categoryIds : []
 
     const beneficio = await prisma.benefit.create({
       data: {
-        ...validatedData,
+        ...beneficioData,
         slug,
         imagenUrl: validatedData.imagenUrl || null,
         icono: validatedData.icono || null,
-        categoryId: validatedData.categoryId || null,
         howToUse: validatedData.howToUse || null,
+        categories: {
+          create: categoryIdsArray
+            .filter((id) => id && id !== 'sin-categoria')
+            .map((categoryId) => ({
+              categoryId,
+            })),
+        },
       },
       include: {
-        category: true,
+        categories: {
+          include: {
+            category: true,
+          },
+        },
       },
     })
 
@@ -99,8 +136,15 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Error creating beneficio:', error)
 
-    if (error.name === 'ZodError') {
-      return NextResponse.json({ error: 'Datos inválidos', details: error.errors }, { status: 400 })
+    if (error.name === 'ZodError' || error.issues) {
+      const zodError = error.issues ? error : error
+      return NextResponse.json(
+        {
+          error: 'Datos inválidos',
+          details: zodError.issues || zodError.errors || error.errors,
+        },
+        { status: 400 }
+      )
     }
 
     return NextResponse.json({ error: 'Error al crear beneficio' }, { status: 500 })

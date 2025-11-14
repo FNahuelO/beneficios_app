@@ -19,7 +19,13 @@ export default async function BenefitDetailPage({ params }: BenefitDetailPagePro
 
   const beneficio = await prisma.benefit.findUnique({
     where: { slug },
-    include: { category: true },
+    include: {
+      categories: {
+        include: {
+          category: true,
+        },
+      },
+    },
   })
 
   if (!beneficio) {
@@ -60,10 +66,14 @@ export default async function BenefitDetailPage({ params }: BenefitDetailPagePro
                 Destacado
               </Badge>
             )}
-            {beneficio.category && (
-              <Badge variant="outline" className="mb-4">
-                {beneficio.category.nombre}
-              </Badge>
+            {beneficio.categories && beneficio.categories.length > 0 && (
+              <div className="mb-4 flex flex-wrap gap-2">
+                {beneficio.categories.map((bc) => (
+                  <Badge key={bc.id} variant="outline">
+                    {bc.category.nombre}
+                  </Badge>
+                ))}
+              </div>
             )}
             <h1 className="text-4xl font-bold tracking-tight">{beneficio.titulo}</h1>
           </div>

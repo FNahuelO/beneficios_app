@@ -18,6 +18,7 @@ import {
 import { useToast } from '@/components/ui/use-toast'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import Link from 'next/link'
+import { Separator } from '@/components/ui/separator'
 
 interface Category {
   id: string
@@ -33,7 +34,13 @@ interface Benefit {
   imagenUrl: string | null
   icono: string | null
   destacado: boolean
-  categoryId: string | null
+  categories: {
+    id: string
+    category: {
+      id: string
+      nombre: string
+    }
+  }[]
   howToUse: string | null
 }
 
@@ -51,7 +58,7 @@ export default function EditarBeneficioPage({ params }: { params: Promise<{ slug
     imagenUrl: '',
     icono: '',
     destacado: false,
-    categoryId: '',
+    categoryIds: [] as string[],
     howToUse: '',
   })
 
@@ -73,7 +80,7 @@ export default function EditarBeneficioPage({ params }: { params: Promise<{ slug
           imagenUrl: data.imagenUrl || '',
           icono: data.icono || '',
           destacado: data.destacado,
-          categoryId: data.categoryId || '',
+          categoryIds: data.categories?.map((bc) => bc.category.id) || [],
           howToUse: data.howToUse || '',
         })
       } else {
@@ -120,10 +127,7 @@ export default function EditarBeneficioPage({ params }: { params: Promise<{ slug
         ...formData,
         imagenUrl: formData.imagenUrl || undefined,
         icono: formData.icono || undefined,
-        categoryId:
-          formData.categoryId && formData.categoryId !== 'sin-categoria'
-            ? formData.categoryId
-            : null,
+        categoryIds: formData.categoryIds.filter((id) => id && id !== 'sin-categoria'),
         howToUse: formData.howToUse || undefined,
       }
 
@@ -246,31 +250,56 @@ export default function EditarBeneficioPage({ params }: { params: Promise<{ slug
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
-              {/* Categoría */}
+              {/* Categorías */}
               <div className="space-y-2">
-                <Label htmlFor="categoryId">Categoría</Label>
+                <Label htmlFor="categoryIds">Categorías</Label>
                 {loadingCategories ? (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Loader2 className="h-4 w-4 animate-spin" />
                     Cargando categorías...
                   </div>
                 ) : (
-                  <Select
-                    value={formData.categoryId}
-                    onValueChange={(value) => setFormData({ ...formData, categoryId: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecciona una categoría" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="sin-categoria">Sin categoría</SelectItem>
-                      {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.nombre}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="space-y-2 rounded-md border p-3 max-h-48 overflow-y-auto">
+                    {categories.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">No hay categorías disponibles</p>
+                    ) : (
+                      categories.map((category) => (
+                        <div key={category.id} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`category-${category.id}`}
+                            checked={formData.categoryIds.includes(category.id)}
+                            onCheckedChange={(checked) => {
+                              const currentIds = formData.categoryIds || []
+                              if (checked) {
+                                setFormData({
+                                  ...formData,
+                                  categoryIds: [...currentIds, category.id],
+                                })
+                              } else {
+                                setFormData({
+                                  ...formData,
+                                  categoryIds: currentIds.filter((id) => id !== category.id),
+                                })
+                              }
+                            }}
+                          />
+                          <Label
+                            htmlFor={`category-${category.id}`}
+                            className="text-sm font-normal cursor-pointer"
+                          >
+                            {category.nombre}
+                          </Label>
+                        </div>
+                      ))
+                    )}
+                    {formData.categoryIds.length > 0 && (
+                      <div className="pt-2 border-t">
+                        <p className="text-xs text-muted-foreground">
+                          {formData.categoryIds.length} categoría(s) seleccionada(s)
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
 

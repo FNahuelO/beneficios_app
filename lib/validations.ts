@@ -30,11 +30,11 @@ export type LoginFormData = z.infer<typeof loginSchema>
 export const beneficioSchema = z.object({
   titulo: z.string().min(3, 'El título debe tener al menos 3 caracteres'),
   descripcion: z.string().min(10, 'La descripción debe tener al menos 10 caracteres'),
-  imagenUrl: z.string().url('URL inválida').optional().or(z.literal('')),
-  icono: z.string().optional(),
+  imagenUrl: z.string().url('URL inválida').optional().or(z.literal('')).nullable(),
+  icono: z.string().optional().nullable(),
   destacado: z.boolean().default(false),
-  categoryId: z.string().optional().nullable(),
-  howToUse: z.string().optional(),
+  categoryIds: z.array(z.string()).default([]),
+  howToUse: z.string().optional().nullable(),
 })
 
 export type BeneficioFormData = z.infer<typeof beneficioSchema>
@@ -69,3 +69,27 @@ export const rechazoSchema = z.object({
 })
 
 export type RechazoFormData = z.infer<typeof rechazoSchema>
+
+// Esquema de especialidad médica
+export const medicalSpecialtySchema = z.object({
+  nombre: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
+  imagenUrl: z.string().url('URL inválida').optional().or(z.literal('')),
+  orden: z.number().int().min(0).default(0),
+})
+
+export type MedicalSpecialtyFormData = z.infer<typeof medicalSpecialtySchema>
+
+// Esquema de pago
+export const pagoSchema = z.object({
+  numeroTarjeta: z
+    .string()
+    .min(16, 'El número de tarjeta debe tener 16 dígitos')
+    .max(19, 'Número de tarjeta inválido'),
+  nombreTitular: z.string().min(3, 'El nombre del titular debe tener al menos 3 caracteres'),
+  fechaVencimiento: z.string().regex(/^(0[1-9]|1[0-2])\/\d{2}$/, 'Formato inválido (MM/AA)'),
+  cvv: z.string().min(3, 'CVV inválido').max(4, 'CVV inválido'),
+  registrationId: z.string().min(1, 'ID de registro requerido'),
+  monto: z.number().positive('El monto debe ser mayor a 0').optional().default(0),
+})
+
+export type PagoFormData = z.infer<typeof pagoSchema>

@@ -11,7 +11,13 @@ export default async function HomePage() {
   // Obtener beneficios destacados
   const beneficiosDestacados = await prisma.benefit.findMany({
     where: { destacado: true },
-    include: { category: true },
+    include: {
+      categories: {
+        include: {
+          category: true,
+        },
+      },
+    },
     take: 6,
     orderBy: { createdAt: 'desc' },
   })

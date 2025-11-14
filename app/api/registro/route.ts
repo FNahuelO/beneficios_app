@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { registroSchema } from '@/lib/validations'
-import { sendEmail, emailRegistroRecibido } from '@/lib/email'
 import bcrypt from 'bcryptjs'
 import { RegEstado } from '@prisma/client'
 
@@ -59,18 +58,12 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Enviar email de confirmación
-    const emailTemplate = emailRegistroRecibido(nombreCompleto)
-    await sendEmail({
-      to: validatedData.email,
-      subject: emailTemplate.subject,
-      html: emailTemplate.html,
-    })
+    // No enviamos email aquí, se enviará después del pago cuando se apruebe automáticamente
 
     return NextResponse.json(
       {
         success: true,
-        message: 'Solicitud enviada exitosamente',
+        message: 'Registro completado. Por favor, completa el pago para finalizar.',
         registrationId: registrationRequest.id,
       },
       { status: 201 }

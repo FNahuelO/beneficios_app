@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { consultaCredencialSchema } from '@/lib/validations'
+import { generateQRToken, generateQRTokenURL } from '@/lib/qr-token'
 
 export async function POST(request: NextRequest) {
   try {
@@ -31,15 +32,29 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const credentialId = registrationRequest.user?.credential?.id
+
+    // Generar token QR temporal si la credencial existe y está aprobada
+    let qrToken = null
+    let qrTokenURL = null
+    if (credentialId && registrationRequest.estado === 'APROBADO') {
+      qrToken = generateQRToken(credentialId)
+      const baseUrl =
+        process.env.NEXTAUTH_URL || request.headers.get('origin') || 'http://localhost:3000'
+      qrTokenURL = generateQRTokenURL(qrToken, baseUrl)
+    }
+
     return NextResponse.json({
       nombreCompleto: registrationRequest.nombreCompleto,
       tipoDocumento: registrationRequest.tipoDocumento,
       documento: registrationRequest.documento,
       estado: registrationRequest.estado,
       numeroSocio: registrationRequest.user?.credential?.numeroSocio || null,
-      credentialId: registrationRequest.user?.credential?.id || null,
+      credentialId: credentialId || null,
       fechaAlta: registrationRequest.createdAt,
       comentarioAdmin: registrationRequest.comentarioAdmin,
+      qrToken,
+      qrTokenURL,
     })
   } catch (error: any) {
     console.error('Error consultando credencial:', error)

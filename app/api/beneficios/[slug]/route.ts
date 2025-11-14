@@ -11,7 +11,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const beneficio = await prisma.benefit.findUnique({
       where: { slug },
       include: {
-        category: true,
+        categories: {
+          include: {
+            category: true,
+          },
+        },
       },
     })
 
@@ -37,7 +41,21 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const { slug } = await params
 
     const body = await request.json()
-    const validatedData = beneficioSchema.parse(body)
+
+    // Validar los datos
+    const validationResult = beneficioSchema.safeParse(body)
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Datos inválidos',
+          details: validationResult.error.issues,
+        },
+        { status: 400 }
+      )
+    }
+
+    const validatedData = validationResult.data
 
     const beneficio = await prisma.benefit.findUnique({
       where: { slug },
@@ -63,18 +81,41 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       }
     }
 
+    // Extraer categoryIds y actualizar el beneficio con las categorías
+    const { categoryIds, ...beneficioData } = validatedData
+    const categoryIdsArray = categoryIds && categoryIds.length > 0 ? categoryIds : []
+
+    // Eliminar todas las categorías existentes y crear las nuevas
+    await prisma.benefitCategory
+      .deleteMany({
+        where: { benefitId: beneficio.id },
+      })
+      .catch(() => {
+        // Si falla, continuar (puede que no existan categorías)
+      })
+
     const updated = await prisma.benefit.update({
       where: { slug },
       data: {
-        ...validatedData,
+        ...beneficioData,
         slug: newSlug,
         imagenUrl: validatedData.imagenUrl || null,
         icono: validatedData.icono || null,
-        categoryId: validatedData.categoryId || null,
         howToUse: validatedData.howToUse || null,
+        categories: {
+          create: categoryIdsArray
+            .filter((id) => id && id !== 'sin-categoria')
+            .map((categoryId) => ({
+              categoryId,
+            })),
+        },
       },
       include: {
-        category: true,
+        categories: {
+          include: {
+            category: true,
+          },
+        },
       },
     })
 

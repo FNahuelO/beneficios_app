@@ -33,7 +33,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useToast } from '@/components/ui/use-toast'
 import { formatDate } from '@/lib/utils'
-import { CheckCircle, XCircle, Download, Search, Eye, FileText } from 'lucide-react'
+import { CheckCircle, XCircle, Download, Search, Eye, FileText, CreditCard } from 'lucide-react'
 
 export default function UsuariosAdminPage() {
   const [registros, setRegistros] = useState<any[]>([])
@@ -45,6 +45,10 @@ export default function UsuariosAdminPage() {
   const [comentarioRechazo, setComentarioRechazo] = useState('')
   const [showToggleDialog, setShowToggleDialog] = useState(false)
   const [registroToToggle, setRegistroToToggle] = useState<any>(null)
+  const [showPagosDialog, setShowPagosDialog] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<any>(null)
+  const [pagos, setPagos] = useState<any[]>([])
+  const [loadingPagos, setLoadingPagos] = useState(false)
   const { toast } = useToast()
 
   const fetchRegistros = async () => {
@@ -251,6 +255,52 @@ export default function UsuariosAdminPage() {
     }
   }
 
+  const handleVerPagos = async (registro: any) => {
+    setSelectedUser(registro)
+    setShowPagosDialog(true)
+    setLoadingPagos(true)
+
+    try {
+      const response = await fetch(`/api/admin/pagos/${registro.userId}`)
+      if (!response.ok) throw new Error('Error al cargar pagos')
+
+      const data = await response.json()
+      setPagos(data.pagos || [])
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'No se pudieron cargar los pagos',
+        variant: 'destructive',
+      })
+      setPagos([])
+    } finally {
+      setLoadingPagos(false)
+    }
+  }
+
+  const getEstadoPagoBadge = (estado: string) => {
+    switch (estado) {
+      case 'COMPLETADO':
+        return (
+          <Badge variant="default" className="bg-green-600">
+            Completado
+          </Badge>
+        )
+      case 'PENDIENTE':
+        return <Badge variant="secondary">Pendiente</Badge>
+      case 'FALLIDO':
+        return <Badge variant="destructive">Fallido</Badge>
+      case 'REEMBOLSADO':
+        return (
+          <Badge variant="outline" className="border-orange-500 text-orange-600">
+            Reembolsado
+          </Badge>
+        )
+      default:
+        return null
+    }
+  }
+
   const getEstadoBadge = (estado: string) => {
     switch (estado) {
       case 'APROBADO':
@@ -404,6 +454,14 @@ export default function UsuariosAdminPage() {
                                 <FileText className="mr-1 h-3 w-3" />
                                 PDF
                               </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleVerPagos(registro)}
+                              >
+                                <CreditCard className="mr-1 h-3 w-3" />
+                                Pagos
+                              </Button>
                             </>
                           )}
                           <div className="flex items-center gap-2">
@@ -490,6 +548,80 @@ export default function UsuariosAdminPage() {
               onClick={handleToggleHabilitado}
             >
               {registroToToggle?.estado === 'APROBADO' ? 'Inhabilitar' : 'Habilitar'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showPagosDialog} onOpenChange={setShowPagosDialog}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Historial de Pagos</DialogTitle>
+            <DialogDescription>
+              {selectedUser && (
+                <>
+                  Pagos de <strong>{selectedUser.nombreCompleto}</strong> ({selectedUser.user.email}
+                  )
+                </>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            {loadingPagos ? (
+              <p className="text-center text-muted-foreground">Cargando pagos...</p>
+            ) : pagos.length === 0 ? (
+              <p className="text-center text-muted-foreground">No se encontraron pagos</p>
+            ) : (
+              <div className="space-y-4">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Fecha</TableHead>
+                      <TableHead>Monto</TableHead>
+                      <TableHead>Método</TableHead>
+                      <TableHead>Tarjeta</TableHead>
+                      <TableHead>Estado</TableHead>
+                      <TableHead>Referencia</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {pagos.map((pago) => (
+                      <TableRow key={pago.id}>
+                        <TableCell>{formatDate(pago.createdAt)}</TableCell>
+                        <TableCell className="font-medium">
+                          ${pago.monto.toFixed(2)} {pago.moneda}
+                        </TableCell>
+                        <TableCell className="capitalize">{pago.metodoPago}</TableCell>
+                        <TableCell>
+                          {pago.numeroTarjeta ? `****${pago.numeroTarjeta}` : 'N/A'}
+                        </TableCell>
+                        <TableCell>{getEstadoPagoBadge(pago.estado)}</TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {pago.referenciaExterna || 'N/A'}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                <div className="flex justify-between items-center pt-4 border-t">
+                  <div className="text-sm text-muted-foreground">
+                    Total de pagos: {pagos.length}
+                  </div>
+                  <div className="text-lg font-semibold">
+                    Total: $
+                    {pagos
+                      .filter((p) => p.estado === 'COMPLETADO')
+                      .reduce((sum, p) => sum + p.monto, 0)
+                      .toFixed(2)}{' '}
+                    ARS
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowPagosDialog(false)}>
+              Cerrar
             </Button>
           </DialogFooter>
         </DialogContent>

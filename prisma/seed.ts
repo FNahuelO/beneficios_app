@@ -224,6 +224,68 @@ async function main() {
 
   console.log('✅ Settings creados')
 
+  // Crear especialidades médicas
+  const especialidades = [
+    {
+      nombre: 'Cardiología',
+      imagenUrl:
+        'https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?w=400&h=400&fit=crop',
+      orden: 0,
+    },
+    {
+      nombre: 'Clínica médica general',
+      imagenUrl:
+        'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=400&fit=crop',
+      orden: 1,
+    },
+    {
+      nombre: 'Pediatría',
+      imagenUrl: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop',
+      orden: 2,
+    },
+    {
+      nombre: 'Psicología',
+      imagenUrl:
+        'https://images.unsplash.com/photo-1573497491208-6b1acb260507?w=400&h=400&fit=crop',
+      orden: 3,
+    },
+    {
+      nombre: 'Dermatología',
+      imagenUrl:
+        'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=400&fit=crop',
+      orden: 4,
+    },
+    {
+      nombre: 'Ginecología',
+      imagenUrl:
+        'https://images.unsplash.com/photo-1579154204601-01588f351e67?w=400&h=400&fit=crop',
+      orden: 5,
+    },
+  ]
+
+  // Crear o actualizar especialidades usando nombre como referencia
+  for (const especialidad of especialidades) {
+    const existe = await prisma.medicalSpecialty.findFirst({
+      where: { nombre: especialidad.nombre },
+    })
+
+    if (!existe) {
+      await prisma.medicalSpecialty.create({
+        data: especialidad,
+      })
+    } else {
+      await prisma.medicalSpecialty.update({
+        where: { id: existe.id },
+        data: {
+          imagenUrl: especialidad.imagenUrl,
+          orden: especialidad.orden,
+        },
+      })
+    }
+  }
+
+  console.log('✅ Especialidades médicas creadas:', especialidades.length)
+
   console.log('🎉 Seed completado exitosamente!')
 }
 

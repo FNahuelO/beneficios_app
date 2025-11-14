@@ -1,15 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { BenefitCard } from '@/components/beneficios/benefit-card'
-import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { BeneficiosFilters } from '@/components/beneficios/beneficios-filters'
 import { Badge } from '@/components/ui/badge'
-import { Search } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -39,18 +31,30 @@ export default async function BeneficiosPage({ searchParams }: BeneficiosPagePro
     ]
   }
 
-  if (categoria) {
-    where.category = { slug: categoria }
+  if (categoria && categoria !== 'all') {
+    where.categories = {
+      some: {
+        category: {
+          slug: categoria,
+        },
+      },
+    }
   }
 
-  if (destacado !== undefined && destacado !== '') {
+  if (destacado !== undefined && destacado !== '' && destacado !== 'all') {
     where.destacado = destacado === 'true'
   }
 
   const [beneficios, total, categorias] = await Promise.all([
     prisma.benefit.findMany({
       where,
-      include: { category: true },
+      include: {
+        categories: {
+          include: {
+            category: true,
+          },
+        },
+      },
       orderBy: [{ destacado: 'desc' }, { createdAt: 'desc' }],
       skip: (page - 1) * limit,
       take: limit,
@@ -74,49 +78,25 @@ export default async function BeneficiosPage({ searchParams }: BeneficiosPagePro
         </div>
 
         {/* Filtros */}
-        <div className="mb-8 grid gap-4 md:grid-cols-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-3 h-4 w-4 " />
-            <Input placeholder="Buscar beneficios..." defaultValue={search} className="pl-9" />
-          </div>
-
-          <Select defaultValue={categoria}>
-            <SelectTrigger>
-              <SelectValue placeholder="Todas las categorías" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todas las categorías</SelectItem>
-              {categorias.map((cat) => (
-                <SelectItem key={cat.id} value={cat.slug}>
-                  {cat.nombre}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select defaultValue={destacado}>
-            <SelectTrigger>
-              <SelectValue placeholder="Todos los beneficios" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              <SelectItem value="true">Solo destacados</SelectItem>
-              <SelectItem value="false">No destacados</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <BeneficiosFilters
+          categorias={categorias}
+          initialSearch={search}
+          initialCategoria={categoria}
+          initialDestacado={destacado}
+        />
 
         {/* Filtros activos */}
-        {(search || categoria || destacado) && (
+        {(search || (categoria && categoria !== 'all') || (destacado && destacado !== 'all')) && (
           <div className="mb-6 flex flex-wrap gap-2">
             <span className="text-sm text-white">Filtros activos:</span>
             {search && <Badge variant="secondary">Búsqueda: {search}</Badge>}
-            {categoria && (
+            {categoria && categoria !== 'all' && (
               <Badge variant="secondary">
                 Categoría: {categorias.find((c) => c.slug === categoria)?.nombre}
               </Badge>
             )}
             {destacado === 'true' && <Badge variant="secondary">Solo destacados</Badge>}
+            {destacado === 'false' && <Badge variant="secondary">No destacados</Badge>}
           </div>
         )}
 

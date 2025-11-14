@@ -3,7 +3,12 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { registroSchema, type RegistroFormData } from '@/lib/validations'
+import {
+  registroSchema,
+  type RegistroFormData,
+  pagoSchema,
+  type PagoFormData,
+} from '@/lib/validations'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -16,12 +21,14 @@ import {
 } from '@/components/ui/select'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
-import { CheckCircle, Info } from 'lucide-react'
+import { CheckCircle, Info, CreditCard, Lock } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export default function RegistroPage() {
   const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
+  const [showPago, setShowPago] = useState(false)
+  const [registrationId, setRegistrationId] = useState<string | null>(null)
+  const [pagoLoading, setPagoLoading] = useState(false)
   const { toast } = useToast()
   const router = useRouter()
 
@@ -38,7 +45,19 @@ export default function RegistroPage() {
     },
   })
 
+  const {
+    register: registerPago,
+    handleSubmit: handleSubmitPago,
+    setValue: setValuePago,
+    watch: watchPago,
+    formState: { errors: errorsPago },
+  } = useForm<PagoFormData>({
+    resolver: zodResolver(pagoSchema),
+  })
+
   const tipoDocumento = watch('tipoDocumento')
+  const numeroTarjeta = watchPago('numeroTarjeta')
+  const fechaVencimiento = watchPago('fechaVencimiento')
 
   const onSubmit = async (data: RegistroFormData) => {
     setLoading(true)
@@ -55,15 +74,15 @@ export default function RegistroPage() {
         throw new Error(errorData.error || 'Error al procesar la solicitud')
       }
 
-      setSuccess(true)
+      const responseData = await response.json()
+      setRegistrationId(responseData.registrationId)
+      setShowPago(true)
+      setValuePago('registrationId', responseData.registrationId)
+
       toast({
         title: 'Registro exitoso',
-        description: 'Tu solicitud fue enviada correctamente',
+        description: 'Ahora completa el pago para finalizar tu registro',
       })
-
-      setTimeout(() => {
-        router.push('/credencial')
-      }, 10000)
     } catch (err: any) {
       toast({
         title: 'Error',
@@ -75,29 +94,192 @@ export default function RegistroPage() {
     }
   }
 
-  if (success) {
+  const onSubmitPago = async (data: PagoFormData) => {
+    setPagoLoading(true)
+
+    try {
+      const response = await fetch('/api/registro/pago', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Error al procesar el pago')
+      }
+
+      toast({
+        title: 'Pago exitoso',
+        description: 'Tu registro ha sido completado exitosamente',
+      })
+
+      setTimeout(() => {
+        router.push('/credencial')
+      }, 2000)
+    } catch (err: any) {
+      toast({
+        title: 'Error en el pago',
+        description: err.message,
+        variant: 'destructive',
+      })
+    } finally {
+      setPagoLoading(false)
+    }
+  }
+
+  // Formatear número de tarjeta
+  const formatCardNumber = (value: string) => {
+    const cleaned = value.replace(/\s/g, '')
+    const formatted = cleaned.match(/.{1,4}/g)?.join(' ') || cleaned
+    return formatted.slice(0, 19) // Máximo 16 dígitos + 3 espacios
+  }
+
+  // Formatear fecha de vencimiento
+  const formatExpiryDate = (value: string) => {
+    const cleaned = value.replace(/\D/g, '')
+    if (cleaned.length >= 2) {
+      return cleaned.slice(0, 2) + '/' + cleaned.slice(2, 4)
+    }
+    return cleaned
+  }
+
+  if (showPago && registrationId) {
     return (
-      <div className="container max-w-2xl py-12">
-        <Card className="border-green-200 bg-green-50">
-          <CardHeader>
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-600 text-white">
+      <div className="min-h-screen bg-white py-12">
+        <div className="container max-w-2xl px-4">
+          {/* Header */}
+          <div className="mb-8 text-center">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-600">
               <CheckCircle className="h-8 w-8" />
             </div>
-            <CardTitle className="text-center text-2xl">¡Registro Exitoso!</CardTitle>
-            <CardDescription className="text-center">
-              Recibimos tu solicitud correctamente
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4 text-center">
-            <p className="text-muted-foreground">
-              Te enviamos un email de confirmación. Un administrador revisará tu solicitud y te
-              notificaremos cuando sea aprobada.
-            </p>
-            <Button onClick={() => router.push('/credencial')}>
-              Consultar estado de mi solicitud
-            </Button>
-          </CardContent>
-        </Card>
+            <h1 className="mb-2 text-4xl font-bold tracking-tight text-[#00438A]">
+              Registro Exitoso
+            </h1>
+            <p className="text-lg text-[#00438A]">Completa el pago para finalizar tu registro</p>
+          </div>
+
+          {/* Formulario de Pago */}
+          <Card className="shadow-lg">
+            <div className="h-7 rounded-t-lg bg-[#103F79]"></div>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <CreditCard className="h-5 w-5 text-[#00438A]" />
+                <CardTitle className="text-xl text-[#00438A]">Datos de Pago</CardTitle>
+              </div>
+              <CardDescription>
+                <div className="flex items-center gap-2 mt-2">
+                  <Lock className="h-4 w-4" />
+                  <span>Formulario de prueba - No se procesarán pagos reales</span>
+                </div>
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmitPago(onSubmitPago)} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="numeroTarjeta" className="text-[#00438A]">
+                    Número de Tarjeta
+                  </Label>
+                  <Input
+                    id="numeroTarjeta"
+                    placeholder="1234 5678 9012 3456"
+                    className="border-gray-300"
+                    maxLength={19}
+                    {...registerPago('numeroTarjeta', {
+                      onChange: (e) => {
+                        const formatted = formatCardNumber(e.target.value)
+                        setValuePago('numeroTarjeta', formatted)
+                      },
+                    })}
+                  />
+                  {errorsPago.numeroTarjeta && (
+                    <p className="text-sm text-destructive">{errorsPago.numeroTarjeta.message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="nombreTitular" className="text-[#00438A]">
+                    Nombre del Titular
+                  </Label>
+                  <Input
+                    id="nombreTitular"
+                    placeholder="JUAN PEREZ"
+                    className="border-gray-300 uppercase"
+                    {...registerPago('nombreTitular', {
+                      onChange: (e) => {
+                        setValuePago('nombreTitular', e.target.value.toUpperCase())
+                      },
+                    })}
+                  />
+                  {errorsPago.nombreTitular && (
+                    <p className="text-sm text-destructive">{errorsPago.nombreTitular.message}</p>
+                  )}
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="fechaVencimiento" className="text-[#00438A]">
+                      Fecha de Vencimiento
+                    </Label>
+                    <Input
+                      id="fechaVencimiento"
+                      placeholder="MM/AA"
+                      className="border-gray-300"
+                      maxLength={5}
+                      {...registerPago('fechaVencimiento', {
+                        onChange: (e) => {
+                          const formatted = formatExpiryDate(e.target.value)
+                          setValuePago('fechaVencimiento', formatted)
+                        },
+                      })}
+                    />
+                    {errorsPago.fechaVencimiento && (
+                      <p className="text-sm text-destructive">
+                        {errorsPago.fechaVencimiento.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="cvv" className="text-[#00438A]">
+                      CVV
+                    </Label>
+                    <Input
+                      id="cvv"
+                      placeholder="123"
+                      type="password"
+                      className="border-gray-300"
+                      maxLength={4}
+                      {...registerPago('cvv')}
+                    />
+                    {errorsPago.cvv && (
+                      <p className="text-sm text-destructive">{errorsPago.cvv.message}</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Información */}
+                <div className="flex items-start gap-2 rounded-lg bg-blue-50 p-4">
+                  <Info className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
+                  <p className="text-sm text-blue-800">
+                    Este es un formulario de prueba. No se realizará ningún cargo real. Una vez
+                    completado, tu registro será aprobado automáticamente.
+                  </p>
+                </div>
+
+                {/* Botón */}
+                <Button
+                  type="submit"
+                  className="w-full bg-[#F3B229] text-white hover:bg-[#F3B229]/80"
+                  size="lg"
+                  disabled={pagoLoading}
+                >
+                  {pagoLoading ? 'Procesando pago...' : 'Completar Pago'}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     )
   }

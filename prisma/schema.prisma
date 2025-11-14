@@ -19,6 +19,7 @@ model User {
   updatedAt     DateTime              @updatedAt
   registration  RegistrationRequest?
   credential    Credential?
+  payments      Payment[]
 }
 
 model RegistrationRequest {
@@ -51,28 +52,41 @@ model Credential {
 }
 
 model Category {
-  id       String    @id @default(cuid())
+  id       String            @id @default(cuid())
   nombre   String
-  slug     String    @unique
-  orden    Int       @default(0)
-  benefits Benefit[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  slug     String            @unique
+  orden    Int               @default(0)
+  benefits BenefitCategory[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
 }
 
 model Benefit {
-  id          String    @id @default(cuid())
+  id          String            @id @default(cuid())
   titulo      String
-  slug        String    @unique
-  descripcion String    @db.Text
+  slug        String            @unique
+  descripcion String            @db.Text
   imagenUrl   String?
   icono       String?
-  destacado   Boolean   @default(false)
-  categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  howToUse    String?   @db.Text // texto rico
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  destacado   Boolean           @default(false)
+  categoryId  String?           // Temporal para migración
+  categories  BenefitCategory[]
+  howToUse    String?           @db.Text // texto rico
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model BenefitCategory {
+  id         String   @id @default(cuid())
+  benefitId  String
+  categoryId String
+  benefit    Benefit  @relation(fields: [benefitId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([benefitId, categoryId])
+  @@index([benefitId])
+  @@index([categoryId])
 }
 
 model Settings {
@@ -82,6 +96,15 @@ model Settings {
   nombreOrganizacion String?  @default("Mi Organización")
   logoUrl            String?
   updatedAt          DateTime @updatedAt
+}
+
+model MedicalSpecialty {
+  id        String   @id @default(cuid())
+  nombre    String
+  imagenUrl String?
+  orden     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Role {
@@ -95,4 +118,28 @@ enum RegEstado {
   APROBADO
   RECHAZADO
   INHABILITADO
+}
+
+enum PaymentStatus {
+  PENDIENTE
+  COMPLETADO
+  FALLIDO
+  REEMBOLSADO
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  userId            String
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  registrationId    String        // ID de la solicitud de registro asociada
+  monto             Float         @default(0)
+  moneda            String        @default("ARS")
+  metodoPago        String        // "tarjeta", "transferencia", etc.
+  numeroTarjeta     String?       // Últimos 4 dígitos (encriptado o hasheado)
+  nombreTitular     String?
+  estado            PaymentStatus @default(PENDIENTE)
+  referenciaExterna String?       // ID de referencia del servicio de pago externo
+  metadata          String?       @db.Text // JSON con información adicional
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 }

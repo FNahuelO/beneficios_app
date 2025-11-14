@@ -3,7 +3,16 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import { LayoutDashboard, Gift, Tag, Users, Phone, Settings, LogOut } from 'lucide-react'
+import {
+  LayoutDashboard,
+  Gift,
+  Tag,
+  Users,
+  Phone,
+  Settings,
+  LogOut,
+  Stethoscope,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { signOut, useSession } from 'next-auth/react'
 
@@ -32,6 +41,11 @@ const navItems = [
     title: 'Telemedicina',
     href: '/admin/telemedicina',
     icon: Phone,
+  },
+  {
+    title: 'Especialidades',
+    href: '/admin/especialidades',
+    icon: Stethoscope,
   },
   {
     title: 'Ajustes',

@@ -23,9 +23,12 @@ interface Benefit {
   descripcion: string
   icono: string | null
   destacado: boolean
-  category: {
-    nombre: string
-  } | null
+  categories: {
+    id: string
+    category: {
+      nombre: string
+    }
+  }[]
 }
 
 interface BeneficiosContentProps {
@@ -102,8 +105,14 @@ export function BeneficiosContent({ initialBeneficios }: BeneficiosContentProps)
                         </div>
                       </TableCell>
                       <TableCell>
-                        {beneficio.category ? (
-                          <Badge variant="secondary">{beneficio.category.nombre}</Badge>
+                        {beneficio.categories && beneficio.categories.length > 0 ? (
+                          <div className="flex flex-wrap gap-1">
+                            {beneficio.categories.map((bc) => (
+                              <Badge key={bc.id} variant="secondary">
+                                {bc.category.nombre}
+                              </Badge>
+                            ))}
+                          </div>
                         ) : (
                           <span className="text-sm text-muted-foreground">Sin categoría</span>
                         )}

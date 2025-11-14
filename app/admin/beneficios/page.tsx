@@ -4,7 +4,11 @@ import { BeneficiosContent } from './content'
 export default async function BeneficiosAdminPage() {
   const beneficios = await prisma.benefit.findMany({
     include: {
-      category: true,
+      categories: {
+        include: {
+          category: true,
+        },
+      },
     },
     orderBy: [{ destacado: 'desc' }, { createdAt: 'desc' }],
   })

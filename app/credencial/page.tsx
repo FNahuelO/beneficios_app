@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/components/ui/use-toast'
 import { CreditCard, Download, AlertCircle, CheckCircle, Clock } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
+import QRCode from 'qrcode'
 
 interface CredentialData {
   nombreCompleto: string
@@ -24,6 +25,7 @@ interface CredentialData {
   credentialId: string | null
   fechaAlta: string
   comentarioAdmin: string | null
+  qrTokenURL: string | null
 }
 
 export default function CredencialPage() {
@@ -31,6 +33,8 @@ export default function CredencialPage() {
   const [credential, setCredential] = useState<CredentialData | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [hasAutoQueried, setHasAutoQueried] = useState(false)
+  const [qrImageUrl, setQrImageUrl] = useState<string | null>(null)
+  const [timeRemaining, setTimeRemaining] = useState<number>(300) // 5 minutos en segundos
   const { toast } = useToast()
   const searchParams = useSearchParams()
 
@@ -47,6 +51,8 @@ export default function CredencialPage() {
     setLoading(true)
     setError(null)
     setCredential(null)
+    setQrImageUrl(null)
+    setTimeRemaining(300)
 
     try {
       const response = await fetch('/api/credencial/consultar', {
@@ -62,6 +68,20 @@ export default function CredencialPage() {
 
       const credentialData = await response.json()
       setCredential(credentialData)
+
+      // Generar QR si hay URL del token
+      if (credentialData.qrTokenURL) {
+        try {
+          const qrDataUrl = await QRCode.toDataURL(credentialData.qrTokenURL, {
+            width: 200,
+            margin: 2,
+          })
+          setQrImageUrl(qrDataUrl)
+          setTimeRemaining(300) // Reiniciar contador a 5 minutos
+        } catch (qrError) {
+          console.error('Error generando QR:', qrError)
+        }
+      }
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -87,6 +107,8 @@ export default function CredencialPage() {
       setLoading(true)
       setError(null)
       setCredential(null)
+      setQrImageUrl(null)
+      setTimeRemaining(300)
 
       fetch('/api/credencial/consultar', {
         method: 'POST',
@@ -100,8 +122,22 @@ export default function CredencialPage() {
           }
           return response.json()
         })
-        .then((credentialData) => {
+        .then(async (credentialData) => {
           setCredential(credentialData)
+
+          // Generar QR si hay URL del token
+          if (credentialData.qrTokenURL) {
+            try {
+              const qrDataUrl = await QRCode.toDataURL(credentialData.qrTokenURL, {
+                width: 200,
+                margin: 2,
+              })
+              setQrImageUrl(qrDataUrl)
+              setTimeRemaining(300) // Reiniciar contador a 5 minutos
+            } catch (qrError) {
+              console.error('Error generando QR:', qrError)
+            }
+          }
         })
         .catch((err: any) => {
           setError(err.message)
@@ -112,6 +148,37 @@ export default function CredencialPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams])
+
+  // Contador de expiración del QR
+  useEffect(() => {
+    if (!qrImageUrl || timeRemaining <= 0) {
+      return
+    }
+
+    const interval = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 1) {
+          setQrImageUrl(null)
+          toast({
+            title: 'QR expirado',
+            description: 'El código QR ha expirado. Consultá nuevamente para generar uno nuevo.',
+            variant: 'destructive',
+          })
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [qrImageUrl, timeRemaining, toast])
+
+  // Formatear tiempo restante en MM:SS
+  const formatTimeRemaining = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+  }
 
   const handleDownloadPDF = async () => {
     if (!credential?.credentialId) return
@@ -300,21 +367,58 @@ export default function CredencialPage() {
               </div>
 
               {credential.estado === 'APROBADO' && credential.credentialId && (
-                <div className="rounded-lg border border-white/20 bg-white/10 p-6">
-                  <div className="mb-4 flex items-center justify-between">
-                    <div>
-                      <h3 className="font-semibold text-white">Credencial Digital</h3>
-                      <p className="text-sm text-white/80">Tu credencial está lista para usar</p>
+                <>
+                  <div className="rounded-lg border border-white/20 bg-white/10 p-6">
+                    <div className="mb-4 flex items-center justify-between">
+                      <div>
+                        <h3 className="font-semibold text-white">Credencial Digital</h3>
+                        <p className="text-sm text-white/80">Tu credencial está lista para usar</p>
+                      </div>
+                      <Button
+                        onClick={handleDownloadPDF}
+                        className="bg-[#F3B229] text-white hover:bg-[#F3B229]/90 font-bold rounded-xl"
+                      >
+                        <Download className="mr-2 h-4 w-4" />
+                        Descargar PDF
+                      </Button>
                     </div>
-                    <Button
-                      onClick={handleDownloadPDF}
-                      className="bg-[#F3B229] text-white hover:bg-[#F3B229]/90 font-bold rounded-xl"
-                    >
-                      <Download className="mr-2 h-4 w-4" />
-                      Descargar PDF
-                    </Button>
                   </div>
-                </div>
+
+                  {qrImageUrl && (
+                    <div className="rounded-lg border border-white/20 bg-white/10 p-6">
+                      <div className="mb-4 text-center">
+                        <h3 className="mb-2 font-semibold text-white">Código QR Temporal</h3>
+                        <p className="mb-4 text-sm text-white/80">
+                          Escaneá este código para validar tu credencial
+                        </p>
+                        {timeRemaining > 0 ? (
+                          <Badge variant="secondary" className="mb-4 gap-1">
+                            <Clock className="h-3 w-3" />
+                            Expira en: {formatTimeRemaining(timeRemaining)}
+                          </Badge>
+                        ) : (
+                          <Badge variant="destructive" className="mb-4 gap-1">
+                            <AlertCircle className="h-3 w-3" />
+                            Expirado
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex justify-center">
+                        <div className="rounded-lg bg-white p-4">
+                          <img
+                            src={qrImageUrl}
+                            alt="Código QR de credencial"
+                            className="h-48 w-48"
+                          />
+                        </div>
+                      </div>
+                      <p className="mt-4 text-center text-xs text-white/60">
+                        Este código QR tiene una validez de 5 minutos. Consultá nuevamente para
+                        generar uno nuevo.
+                      </p>
+                    </div>
+                  )}
+                </>
               )}
 
               {credential.estado === 'PENDIENTE' && (

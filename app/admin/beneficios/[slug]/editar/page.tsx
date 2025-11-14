@@ -275,7 +275,7 @@ export default function EditarBeneficioPage({ params }: { params: Promise<{ slug
               </div>
 
               {/* Icono */}
-              <div className="space-y-2">
+              {/*  <div className="space-y-2">
                 <Label htmlFor="icono">Icono (emoji)</Label>
                 <Input
                   id="icono"
@@ -287,7 +287,7 @@ export default function EditarBeneficioPage({ params }: { params: Promise<{ slug
                 <p className="text-sm text-muted-foreground">
                   Opcional: Un emoji o ícono que represente el beneficio
                 </p>
-              </div>
+              </div> */}
             </div>
 
             {/* URL de Imagen */}

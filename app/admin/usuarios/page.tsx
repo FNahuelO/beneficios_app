@@ -30,9 +30,10 @@ import {
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
 import { useToast } from '@/components/ui/use-toast'
 import { formatDate } from '@/lib/utils'
-import { CheckCircle, XCircle, Download, Search } from 'lucide-react'
+import { CheckCircle, XCircle, Download, Search, Eye, FileText } from 'lucide-react'
 
 export default function UsuariosAdminPage() {
   const [registros, setRegistros] = useState<any[]>([])
@@ -42,6 +43,8 @@ export default function UsuariosAdminPage() {
   const [selectedRegistro, setSelectedRegistro] = useState<any>(null)
   const [showRejectDialog, setShowRejectDialog] = useState(false)
   const [comentarioRechazo, setComentarioRechazo] = useState('')
+  const [showToggleDialog, setShowToggleDialog] = useState(false)
+  const [registroToToggle, setRegistroToToggle] = useState<any>(null)
   const { toast } = useToast()
 
   const fetchRegistros = async () => {
@@ -117,6 +120,101 @@ export default function UsuariosAdminPage() {
       toast({
         title: 'Error',
         description: 'No se pudo rechazar la solicitud',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const handleToggleClick = (registro: any) => {
+    setRegistroToToggle(registro)
+    setShowToggleDialog(true)
+  }
+
+  const handleToggleHabilitado = async () => {
+    if (!registroToToggle) return
+
+    try {
+      const response = await fetch(`/api/admin/registro/${registroToToggle.id}/toggle`, {
+        method: 'POST',
+      })
+
+      if (!response.ok) throw new Error('Error al cambiar estado')
+
+      const data = await response.json()
+
+      toast({
+        title: data.message,
+        description:
+          data.nuevoEstado === 'APROBADO'
+            ? 'El usuario ha sido habilitado'
+            : 'El usuario ha sido inhabilitado',
+      })
+
+      setShowToggleDialog(false)
+      setRegistroToToggle(null)
+      fetchRegistros()
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'No se pudo cambiar el estado',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const handleVerCredencial = (registro: any) => {
+    const url = `/credencial?doc=${registro.documento}&email=${registro.user.email}`
+    window.open(url, '_blank')
+  }
+
+  const handleDescargarPDF = async (registro: any) => {
+    try {
+      // Primero necesitamos obtener el ID de la credencial
+      const consultaResponse = await fetch('/api/credencial/consultar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          documento: registro.documento,
+          email: registro.user.email,
+        }),
+      })
+
+      if (!consultaResponse.ok) {
+        throw new Error('No se pudo encontrar la credencial')
+      }
+
+      const consultaData = await consultaResponse.json()
+      if (!consultaData.credentialId) {
+        toast({
+          title: 'Error',
+          description: 'No se encontró la credencial',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      // Descargar el PDF
+      const pdfResponse = await fetch(`/api/credencial/${consultaData.credentialId}/pdf`)
+      if (!pdfResponse.ok) throw new Error('Error al descargar PDF')
+
+      const blob = await pdfResponse.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `credencial-${registro.documento}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
+
+      toast({
+        title: 'Descarga exitosa',
+        description: 'PDF de credencial descargado',
+      })
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'No se pudo descargar el PDF',
         variant: 'destructive',
       })
     }
@@ -279,6 +377,43 @@ export default function UsuariosAdminPage() {
                           </Button>
                         </div>
                       )}
+                      {(registro.estado === 'APROBADO' || registro.estado === 'RECHAZADO') && (
+                        <div className="flex items-center gap-2">
+                          {registro.estado === 'APROBADO' && (
+                            <>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleVerCredencial(registro)}
+                              >
+                                <Eye className="mr-1 h-3 w-3" />
+                                Ver Credencial
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleDescargarPDF(registro)}
+                              >
+                                <FileText className="mr-1 h-3 w-3" />
+                                PDF
+                              </Button>
+                            </>
+                          )}
+                          <div className="flex items-center gap-2">
+                            <Checkbox
+                              checked={registro.estado === 'APROBADO'}
+                              onCheckedChange={() => handleToggleClick(registro)}
+                              className="data-[state=checked]:bg-green-600"
+                            />
+                            <Label
+                              className="text-sm cursor-pointer"
+                              onClick={() => handleToggleClick(registro)}
+                            >
+                              {registro.estado === 'APROBADO' ? 'Habilitado' : 'Inhabilitado'}
+                            </Label>
+                          </div>
+                        </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -291,9 +426,15 @@ export default function UsuariosAdminPage() {
       <Dialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Rechazar Solicitud</DialogTitle>
+            <DialogTitle>
+              {selectedRegistro?.estado === 'APROBADO'
+                ? 'Rechazar Usuario Aprobado'
+                : 'Rechazar Solicitud'}
+            </DialogTitle>
             <DialogDescription>
-              Ingresá el motivo del rechazo. El usuario recibirá esta información por email.
+              {selectedRegistro?.estado === 'APROBADO'
+                ? 'Ingresá el motivo del rechazo. El usuario será notificado por email y su credencial será desactivada.'
+                : 'Ingresá el motivo del rechazo. El usuario recibirá esta información por email.'}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -314,6 +455,34 @@ export default function UsuariosAdminPage() {
             </Button>
             <Button variant="destructive" onClick={handleRechazar} disabled={!comentarioRechazo}>
               Rechazar Solicitud
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showToggleDialog} onOpenChange={setShowToggleDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {registroToToggle?.estado === 'APROBADO'
+                ? 'Inhabilitar Usuario'
+                : 'Habilitar Usuario'}
+            </DialogTitle>
+            <DialogDescription>
+              {registroToToggle?.estado === 'APROBADO'
+                ? `¿Estás seguro de que deseas inhabilitar a ${registroToToggle?.nombreCompleto}? El usuario perderá acceso a su credencial.`
+                : `¿Estás seguro de que deseas habilitar a ${registroToToggle?.nombreCompleto}? El usuario recuperará acceso a su credencial.`}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowToggleDialog(false)}>
+              Cancelar
+            </Button>
+            <Button
+              variant={registroToToggle?.estado === 'APROBADO' ? 'destructive' : 'default'}
+              onClick={handleToggleHabilitado}
+            >
+              {registroToToggle?.estado === 'APROBADO' ? 'Inhabilitar' : 'Habilitar'}
             </Button>
           </DialogFooter>
         </DialogContent>

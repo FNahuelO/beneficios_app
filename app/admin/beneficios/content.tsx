@@ -92,7 +92,7 @@ export function BeneficiosContent({ initialBeneficios }: BeneficiosContentProps)
                     <TableRow key={beneficio.id}>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          {beneficio.icono && <span className="text-xl">{beneficio.icono}</span>}
+                          {/* {beneficio.icono && <span className="text-xl">{beneficio.icono}</span>} */}
                           <div>
                             <div className="font-medium">{beneficio.titulo}</div>
                             <div className="text-sm text-muted-foreground line-clamp-1">

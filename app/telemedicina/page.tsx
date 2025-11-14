@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { Button } from '@/components/ui/button'
-import { Phone } from 'lucide-react'
+import { Clock3, Headset, Phone } from 'lucide-react'
 import Image from 'next/image'
 
 export const dynamic = 'force-dynamic'
@@ -55,17 +55,19 @@ export default async function TelemedicinaPage() {
 
         {/* Características principales */}
         <div className="grid gap-6 md:grid-cols-2 mb-8">
-          <div className="rounded-lg border-2 border-[#4A608F] bg-[#00438A] p-12">
+          <div className=" relative rounded-lg border-2 border-[#4A608F] bg-[#00438A] p-12">
             <h3 className="mb-3 text-xl font-semibold">Disponibilidad</h3>
             <p className="text-gray-200 mb-2">24 horas, 7 días a la semana.</p>
             <p className="text-gray-200">Atención inmediata para tus consultas médicas.</p>
+            <Clock3 className="h-9 w-9 absolute top-8 right-14 text-white" />
           </div>
 
-          <div className="rounded-lg border-2 border-[#4A608F] bg-[#00438A] p-12">
+          <div className=" relative rounded-lg border-2 border-[#4A608F] bg-[#00438A] p-12">
             <h3 className="mb-3 text-xl font-semibold">Atención Profesional</h3>
             <p className="text-gray-200">
               Médicos certificados para atender tus consultas por teléfono o videollamada.
             </p>
+            <Headset className="h-9 w-9 absolute top-8 right-14 text-white" />
           </div>
         </div>
 
@@ -77,7 +79,7 @@ export default async function TelemedicinaPage() {
           <div className="rounded-lg bg-[#8DB1FF26] p-8 border border-[#8DB1FF]">
             <div className="text-center">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-500/20">
-                <Phone className="h-8 w-8 text-blue-300" />
+                <Phone className="h-8 w-8 text-white" />
               </div>
               <p className="mb-2 text-sm text-gray-300">Número de contacto</p>
               <p className="mb-6 text-3xl font-bold">{telefono}</p>

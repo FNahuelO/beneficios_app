@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useSearchParams } from 'next/navigation'
 import { consultaCredencialSchema, type ConsultaCredencialFormData } from '@/lib/validations'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -29,17 +30,20 @@ export default function CredencialPage() {
   const [loading, setLoading] = useState(false)
   const [credential, setCredential] = useState<CredentialData | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [hasAutoQueried, setHasAutoQueried] = useState(false)
   const { toast } = useToast()
+  const searchParams = useSearchParams()
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<ConsultaCredencialFormData>({
     resolver: zodResolver(consultaCredencialSchema),
   })
 
-  const onSubmit = async (data: ConsultaCredencialFormData) => {
+  const consultarCredencial = async (data: ConsultaCredencialFormData) => {
     setLoading(true)
     setError(null)
     setCredential(null)
@@ -64,6 +68,50 @@ export default function CredencialPage() {
       setLoading(false)
     }
   }
+
+  const onSubmit = async (data: ConsultaCredencialFormData) => {
+    await consultarCredencial(data)
+  }
+
+  // Efecto para leer parámetros de la URL y consultar automáticamente
+  useEffect(() => {
+    const doc = searchParams.get('doc')
+    const email = searchParams.get('email')
+
+    if (doc && email && !hasAutoQueried) {
+      setValue('documento', doc)
+      setValue('email', email)
+      setHasAutoQueried(true)
+
+      // Consultar automáticamente
+      setLoading(true)
+      setError(null)
+      setCredential(null)
+
+      fetch('/api/credencial/consultar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ documento: doc, email }),
+      })
+        .then(async (response) => {
+          if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || 'Error al consultar credencial')
+          }
+          return response.json()
+        })
+        .then((credentialData) => {
+          setCredential(credentialData)
+        })
+        .catch((err: any) => {
+          setError(err.message)
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
 
   const handleDownloadPDF = async () => {
     if (!credential?.credentialId) return

@@ -6,7 +6,7 @@ import { signOut } from 'next-auth/react'
 
 export function LogoutButton() {
   return (
-    <Button variant="outline" onClick={() => signOut({ redirectTo: '/' })}>
+    <Button variant="outline" onClick={() => signOut({ redirectTo: '/' })} className="lg:hidden">
       <LogOut className="mr-2 h-4 w-4" />
       Cerrar Sesión
     </Button>

@@ -48,7 +48,11 @@ export function Navbar() {
           </nav>
 
           <div className="flex items-center space-x-2">
-            <Button variant="outline" asChild>
+            <Button
+              variant="outline"
+              className="bg-[#F3B229] text-white hover:bg-[#01448C] hover:text-white border-none"
+              asChild
+            >
               <Link href="/registro">Registrarse</Link>
             </Button>
           </div>
@@ -78,7 +82,7 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-4 space-y-2 px-4">
-              <Button variant="outline" className="w-full" asChild>
+              <Button variant="outline" className="w-full bg-[#F3B229]" asChild>
                 <Link href="/registro">Registrarse</Link>
               </Button>
             </div>

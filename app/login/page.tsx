@@ -7,12 +7,9 @@ import { loginSchema, type LoginFormData } from '@/lib/validations'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
-import { LogIn } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false)
@@ -65,50 +62,62 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="container flex min-h-[calc(100vh-4rem)] items-center justify-center py-12">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            <LogIn className="h-8 w-8" />
+    <div className="flex min-h-screen items-center justify-center bg-[#1e3a8a] py-12 px-4">
+      <div className="flex w-full max-w-5xl overflow-hidden rounded-2xl bg-white shadow-2xl h-[65vh]">
+        {/* Sección izquierda con imagen de fondo */}
+        <div
+          className="relative hidden w-[50%] bg-cover bg-center bg-no-repeat lg:block"
+          style={{ backgroundImage: 'url(/login.png)' }}
+        ></div>
+
+        {/* Sección derecha con el formulario */}
+        <div className="w-full bg-white p-8 lg:w-[50%] lg:p-12 flex flex-col gap-4 justify-center items-center">
+          <div className="mx-auto max-w-md">
+            <h1 className="mb-2 text-3xl font-bold text-black">Iniciar Sesión</h1>
+            <p className="mb-8 text-sm text-gray-600">
+              Ingresá tus credenciales para acceder al panel administrativo
+            </p>
+
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+              <div className="">
+                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  className="w-full border-gray-300"
+                  {...register('email')}
+                />
+                {errors.email && <p className="text-sm text-red-600">{errors.email.message}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  className="w-full border-gray-300"
+                  {...register('password')}
+                />
+                {errors.password && (
+                  <p className="text-sm text-red-600">{errors.password.message}</p>
+                )}
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full rounded-md bg-[#1e3a8a] text-white hover:bg-[#1e40af]"
+                disabled={loading}
+              >
+                {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+              </Button>
+            </form>
           </div>
-          <CardTitle className="text-2xl">Iniciar Sesión</CardTitle>
-          <CardDescription>
-            Ingresá tus credenciales para acceder al panel administrativo
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="admin@demo.com" {...register('email')} />
-              {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Contraseña</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                {...register('password')}
-              />
-              {errors.password && (
-                <p className="text-sm text-destructive">{errors.password.message}</p>
-              )}
-            </div>
-
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
-            </Button>
-          </form>
-
-          <div className="mt-4 rounded-lg bg-muted p-4 text-xs">
-            <p className="font-semibold">Credenciales de prueba:</p>
-            <p className="mt-1">Admin: admin@demo.com / admin123</p>
-            <p>Coordinator: coord@demo.com / coord123</p>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }

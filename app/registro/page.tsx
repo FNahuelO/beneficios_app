@@ -63,7 +63,7 @@ export default function RegistroPage() {
 
       setTimeout(() => {
         router.push('/credencial')
-      }, 3000)
+      }, 10000)
     } catch (err: any) {
       toast({
         title: 'Error',

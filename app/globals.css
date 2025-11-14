@@ -70,6 +70,8 @@
   --radius: var(--radius);
 }
 
+/* Custom xs breakpoint (max-width: 379.98px) */
+
 @layer base {
   * {
     @apply border-border;

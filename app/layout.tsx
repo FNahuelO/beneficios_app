@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import localFont from 'next/font/local'
 // @ts-ignore
 import './globals.css'
 import { Navbar } from '@/components/layout/navbar'
@@ -7,9 +7,36 @@ import { Footer } from '@/components/layout/footer'
 import { Toaster } from '@/components/ui/toaster'
 import { headers } from 'next/headers'
 
-const inter = Inter({
-  subsets: ['latin'],
+const inter = localFont({
+  src: [
+    {
+      path: './fonts/Inter-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './fonts/Inter-Medium.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: './fonts/Inter-SemiBold.woff2',
+      weight: '600',
+      style: 'normal',
+    },
+    {
+      path: './fonts/Inter-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: './fonts/Inter-Italic.woff2',
+      weight: '400',
+      style: 'italic',
+    },
+  ],
   variable: '--font-inter',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {

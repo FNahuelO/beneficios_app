@@ -2,7 +2,8 @@ import { z } from 'zod'
 
 // Esquema de registro
 export const registroSchema = z.object({
-  nombreCompleto: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
+  nombre: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
+  apellido: z.string().min(2, 'El apellido debe tener al menos 2 caracteres'),
   tipoDocumento: z.enum(['DNI', 'CUIT'], {
     message: 'Debe seleccionar un tipo de documento',
   }),

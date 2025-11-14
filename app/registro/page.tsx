@@ -15,9 +15,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useToast } from '@/components/ui/use-toast'
-import { UserPlus, CheckCircle, AlertCircle } from 'lucide-react'
+import { CheckCircle, Info } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export default function RegistroPage() {
@@ -104,144 +103,227 @@ export default function RegistroPage() {
   }
 
   return (
-    <div className="container max-w-3xl py-12">
-      <div className="mb-8 text-center">
-        <UserPlus className="mx-auto mb-4 h-16 w-16 text-primary" />
-        <h1 className="mb-2 text-4xl font-bold tracking-tight">Registrate</h1>
-        <p className="text-muted-foreground">
-          Completá el formulario para acceder a todos los beneficios
-        </p>
-      </div>
+    <div className="min-h-screen bg-white py-12">
+      <div className="container max-w-4xl px-4">
+        {/* Header */}
+        <div className="mb-8 text-center">
+          <h1 className="mb-2 text-4xl font-bold tracking-tight text-[#00438A]">Registrate</h1>
+          <p className="text-lg text-[#00438A]">
+            Completa el formulario para acceder a todos los beneficios
+          </p>
+        </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Datos Personales</CardTitle>
-          <CardDescription>Todos los campos son obligatorios</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Información Personal */}
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="nombreCompleto">Nombre Completo</Label>
-                <Input
-                  id="nombreCompleto"
-                  placeholder="Juan Pérez"
-                  {...register('nombreCompleto')}
-                />
-                {errors.nombreCompleto && (
-                  <p className="text-sm text-destructive">{errors.nombreCompleto.message}</p>
-                )}
+        {/* Form Container */}
+        <div className="rounded-lg bg-white shadow-lg">
+          {/* Barra azul superior */}
+          <div className="h-7 rounded-t-lg bg-[#103F79]"></div>
+
+          <div className="p-8">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+              {/* Datos Personales */}
+              <div className="space-y-4">
+                <div>
+                  <h2 className="text-xl font-semibold text-[#00438A]">Datos Personales</h2>
+                  <p className="text-sm text-gray-500">Todos los campos son obligatorios</p>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {/* Columna izquierda */}
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="nombre" className="text-[#00438A]">
+                        Nombre
+                      </Label>
+                      <Input
+                        id="nombre"
+                        placeholder="Juan"
+                        className="border-gray-300"
+                        {...register('nombre')}
+                      />
+                      {errors.nombre && (
+                        <p className="text-sm text-destructive">{errors.nombre.message}</p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="tipoDocumento" className="text-[#00438A]">
+                        Tipo de Documento
+                      </Label>
+                      <Select
+                        value={tipoDocumento}
+                        onValueChange={(value) =>
+                          setValue('tipoDocumento', value as 'DNI' | 'CUIT')
+                        }
+                      >
+                        <SelectTrigger className="border-gray-300">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="DNI">DNI</SelectItem>
+                          <SelectItem value="CUIT">CUIT</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {errors.tipoDocumento && (
+                        <p className="text-sm text-destructive">{errors.tipoDocumento.message}</p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="telefono" className="text-[#00438A]">
+                        Teléfono
+                      </Label>
+                      <Input
+                        id="telefono"
+                        placeholder="+5234567485"
+                        className="border-gray-300"
+                        {...register('telefono')}
+                      />
+                      {errors.telefono && (
+                        <p className="text-sm text-destructive">{errors.telefono.message}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Columna derecha */}
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="apellido" className="text-[#00438A]">
+                        Apellido
+                      </Label>
+                      <Input
+                        id="apellido"
+                        placeholder="Perez"
+                        className="border-gray-300"
+                        {...register('apellido')}
+                      />
+                      {errors.apellido && (
+                        <p className="text-sm text-destructive">{errors.apellido.message}</p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="documento" className="text-[#00438A]">
+                        Número de Documento
+                      </Label>
+                      <Input
+                        id="documento"
+                        placeholder="12345676"
+                        className="border-gray-300"
+                        {...register('documento')}
+                      />
+                      {errors.documento && (
+                        <p className="text-sm text-destructive">{errors.documento.message}</p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-[#00438A]">
+                        Email
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="tu@email.com"
+                        className="border-gray-300"
+                        {...register('email')}
+                      />
+                      {errors.email && (
+                        <p className="text-sm text-destructive">{errors.email.message}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="tipoDocumento">Tipo de Documento</Label>
-                  <Select
-                    value={tipoDocumento}
-                    onValueChange={(value) => setValue('tipoDocumento', value as 'DNI' | 'CUIT')}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="DNI">DNI</SelectItem>
-                      <SelectItem value="CUIT">CUIT</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.tipoDocumento && (
-                    <p className="text-sm text-destructive">{errors.tipoDocumento.message}</p>
-                  )}
-                </div>
+              {/* Dirección */}
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold text-[#00438A]">Dirección</h2>
 
                 <div className="space-y-2">
-                  <Label htmlFor="documento">Número de Documento</Label>
-                  <Input id="documento" placeholder="12345678" {...register('documento')} />
-                  {errors.documento && (
-                    <p className="text-sm text-destructive">{errors.documento.message}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="telefono">Teléfono</Label>
-                  <Input id="telefono" placeholder="+54 11 1234-5678" {...register('telefono')} />
-                  {errors.telefono && (
-                    <p className="text-sm text-destructive">{errors.telefono.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="domicilio" className="text-[#00438A]">
+                    Domicilio
+                  </Label>
                   <Input
-                    id="email"
-                    type="email"
-                    placeholder="tu@email.com"
-                    {...register('email')}
+                    id="domicilio"
+                    placeholder="Av. exxxxx123"
+                    className="border-gray-300"
+                    {...register('domicilio')}
                   />
-                  {errors.email && (
-                    <p className="text-sm text-destructive">{errors.email.message}</p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Dirección */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Dirección</h3>
-
-              <div className="space-y-2">
-                <Label htmlFor="domicilio">Domicilio</Label>
-                <Input
-                  id="domicilio"
-                  placeholder="Av. Siempre Viva 123"
-                  {...register('domicilio')}
-                />
-                {errors.domicilio && (
-                  <p className="text-sm text-destructive">{errors.domicilio.message}</p>
-                )}
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="space-y-2">
-                  <Label htmlFor="ciudad">Ciudad</Label>
-                  <Input id="ciudad" placeholder="Buenos Aires" {...register('ciudad')} />
-                  {errors.ciudad && (
-                    <p className="text-sm text-destructive">{errors.ciudad.message}</p>
+                  {errors.domicilio && (
+                    <p className="text-sm text-destructive">{errors.domicilio.message}</p>
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="provincia">Provincia</Label>
-                  <Input id="provincia" placeholder="Buenos Aires" {...register('provincia')} />
-                  {errors.provincia && (
-                    <p className="text-sm text-destructive">{errors.provincia.message}</p>
-                  )}
-                </div>
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="ciudad" className="text-[#00438A]">
+                      Ciudad
+                    </Label>
+                    <Input
+                      id="ciudad"
+                      placeholder="Buenos Aires"
+                      className="border-gray-300"
+                      {...register('ciudad')}
+                    />
+                    {errors.ciudad && (
+                      <p className="text-sm text-destructive">{errors.ciudad.message}</p>
+                    )}
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="pais">País</Label>
-                  <Input id="pais" placeholder="Argentina" {...register('pais')} />
-                  {errors.pais && <p className="text-sm text-destructive">{errors.pais.message}</p>}
+                  <div className="space-y-2">
+                    <Label htmlFor="provincia" className="text-[#00438A]">
+                      Provincia
+                    </Label>
+                    <Input
+                      id="provincia"
+                      placeholder="Buenos Aires"
+                      className="border-gray-300"
+                      {...register('provincia')}
+                    />
+                    {errors.provincia && (
+                      <p className="text-sm text-destructive">{errors.provincia.message}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="pais" className="text-[#00438A]">
+                      País
+                    </Label>
+                    <Input
+                      id="pais"
+                      placeholder="Argentina"
+                      className="border-gray-300"
+                      {...register('pais')}
+                    />
+                    {errors.pais && (
+                      <p className="text-sm text-destructive">{errors.pais.message}</p>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                Al registrarte, tu solicitud será revisada por un administrador. Recibirás un email
-                cuando sea aprobada.
-              </AlertDescription>
-            </Alert>
+              {/* Información */}
+              <div className="flex items-start gap-2">
+                <Info className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
+                <p className="text-sm text-gray-600">
+                  Al registrarte, tu solicitud será revisada por un administrador. Recibirás un
+                  email cuando sea aprobada.
+                </p>
+              </div>
 
-            <Button type="submit" className="w-full" size="lg" disabled={loading}>
-              {loading ? 'Procesando...' : 'Enviar Solicitud'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+              {/* Botón */}
+              <Button
+                type="submit"
+                className="w-full bg-[#F3B229] text-white hover:bg-[#F3B229]/80"
+                size="lg"
+                disabled={loading}
+              >
+                {loading ? 'Procesando...' : 'Enviar solicitud'}
+              </Button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

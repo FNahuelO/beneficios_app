@@ -57,15 +57,8 @@ export default async function HomePage() {
               Registrate y empezá a disfrutar de todos los beneficios.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-              <Button
-                size="lg"
-                asChild
-                className="bg-[#F3B229] text-blue-900 hover:bg-[#F3B229]/80"
-              >
-                <Link href="/registro">
-                  Registrate Gratis
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+              <Button size="lg" asChild className="bg-[#F3B229] text-white hover:bg-[#F3B229]/80">
+                <Link href="/registro">Registrate</Link>
               </Button>
               <Button
                 size="lg"
@@ -81,7 +74,7 @@ export default async function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="relative overflow-hidden py-16 h-[70vh] flex flex-col items-center justify-center">
+      <section className="relative overflow-hidden py-8 xs:py-12 md:py-16 md:min-h-[70vh] flex flex-col items-center justify-center">
         {/* Imagen de fondo de la Bombonera */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -92,41 +85,45 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-blue-900/80" />
 
         {/* Franja superior amarilla y azul */}
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#F3B229]" />
-        <div className="absolute top-2 left-0 right-0 h-1.5 bg-[#00438A]" />
+        <div className="absolute top-0 left-0 right-0 h-1 xs:h-1.5 bg-[#F3B229]" />
+        <div className="absolute top-1 xs:top-2 left-0 right-0 h-1 xs:h-1.5 bg-[#00438A]" />
 
-        <div className="container relative ">
-          <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        <div className="container relative px-4 xs:px-6">
+          <div className="mb-6 xs:mb-8 md:mb-12 text-center">
+            <h2 className="mb-3 xs:mb-4 text-2xl xs:text-3xl md:text-4xl font-bold tracking-tight text-white">
               ¿Por qué elegir Beneficios?
             </h2>
-            <p className="mx-auto max-w-2xl text-[#FFC958]">
+            <p className="mx-auto max-w-2xl text-sm xs:text-base text-[#FFC958] px-4">
               Todo lo que necesitás para aprovechar al máximo tus descuentos y ventajas exclusivas
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 xs:gap-6 grid-cols-1 lg:grid-cols-4 xs:flex xs:flex-col xs:justify-center xs:items-center">
             {features.map((feature, index) => {
               const Icon = feature.icon
               return (
                 <div
                   key={index}
-                  className="relative flex flex-col rounded-lg bg-blue-900/60 backdrop-blur-sm p-6 pt-3 pb-12"
+                  className="relative flex flex-col rounded-lg bg-blue-900/60 backdrop-blur-sm p-4 xs:p-6 pt-3 pb-10 xs:pb-12"
                 >
-                  <div className="mb-4 h-16 w-16 flex items-center justify-center rounded-lg bg-[#00438A] shadow self-end">
-                    <Icon className="h-8 w-8 text-[#F3B229]" />
+                  <div className="mb-3 xs:mb-4 h-12 w-12 xs:h-16 xs:w-16 flex items-center justify-center rounded-lg bg-[#00438A] shadow self-end">
+                    <Icon className="h-6 w-6 xs:h-8 xs:w-8 text-[#F3B229]" />
                   </div>
-                  <h3 className="mb-4 text-xl font-bold text-white text-start">{feature.title}</h3>
+                  <h3 className="mb-3 xs:mb-4 text-lg xs:text-xl font-bold text-white text-start">
+                    {feature.title}
+                  </h3>
 
-                  <p className="text-white/90 text-sm">{feature.description}</p>
-                  <div className="absolute bottom-0 left-0 right-0 h-2 bg-[#F3B229] rounded-b-3xl" />
+                  <p className="text-white/90 text-xs xs:text-sm leading-relaxed">
+                    {feature.description}
+                  </p>
+                  <div className="absolute bottom-0 left-0 right-0 h-1.5 xs:h-2 bg-[#F3B229] rounded-b-3xl" />
                 </div>
               )
             })}
           </div>
         </div>
-        <div className="absolute bottom-2 left-0 right-0 h-1.5 bg-[#00438A]" />
-        <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-[#F3B229]" />
+        <div className="absolute bottom-1 xs:bottom-2 left-0 right-0 h-1 xs:h-1.5 bg-[#00438A]" />
+        <div className="absolute bottom-0 left-0 right-0 h-1 xs:h-1.5 bg-[#F3B229]" />
       </section>
       {/* Beneficios Destacados */}
       <section className="py-16 ">
@@ -165,7 +162,7 @@ export default async function HomePage() {
 
       {/* Banner UNITE */}
       <section
-        className="relative overflow-hidden bg-linear-to-br from-[#22396B] via-[#003E80] to-[#22396B] py-12 md:py-16 w-11/12 mx-auto translate-y-1/2 z-10"
+        className="relative overflow-hidden bg-linear-to-br from-[#22396B] via-[#003E80] to-[#22396B] py-12 md:py-16 w-11/12 mx-auto translate-y-1/2 z-10 xs:p-6"
         style={{
           border: '1px solid',
           borderImage: 'linear-gradient(to right, #4A608F, #151C29, #4A608F) 1',
@@ -173,20 +170,26 @@ export default async function HomePage() {
       >
         {/* Imagen de fondo en el lado derecho */}
         <div
-          className="absolute right-0 top-0 bottom-0 w-1/2 bg-contain bg-right bg-no-repeat"
+          className="absolute right-0 top-0 bottom-0 w-1/2 bg-contain bg-right bg-no-repeat xs:bg-top xs:w-full xs:h-full"
           style={{ backgroundImage: 'url(/banner.png)' }}
         />
 
-        {/* Overlay con degradado para que la imagen se vea progresivamente */}
-        <div className="absolute inset-0 bg-linear-to-r from-[#22396B] via-[#22396B]/50 to-transparent" />
+        {/* Overlay con degradado de opacidad desde la izquierda */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(to right, #22396B 40%, #22396B 50%, rgba(34, 57, 107, 0.8) 60%, rgba(34, 57, 107, 0.5) 80%, rgba(34, 57, 107, 0.2) 90%, transparent 100%)',
+          }}
+        />
 
         <div className="container relative">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 xs:gap-4">
             <div className="flex-1 text-white z-10">
-              <h2 className="mb-4 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+              <h2 className="mb-4 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight xs:text-2xl">
                 UNITE
               </h2>
-              <p className="text-lg md:text-xl text-white/90 ">
+              <p className="text-lg md:text-xl text-white/90 xs:text-sm">
                 Empezá a disfrutar de experiencias exclusivas pensadas para vos
               </p>
             </div>
@@ -194,7 +197,7 @@ export default async function HomePage() {
               <Button
                 size="lg"
                 asChild
-                className="bg-[#F3B229] text-white hover:bg-[#F3B229]/90 font-bold px-10 py-6 text-md rounded-2xl"
+                className="bg-[#F3B229] text-white hover:bg-[#F3B229]/90 font-bold px-10 py-6 text-md rounded-2xl xs:py-4 xs:px-12"
               >
                 <Link href="/registro">Registrarte</Link>
               </Button>
@@ -209,17 +212,17 @@ export default async function HomePage() {
 
         <div className="container">
           <div className="bg-linear-to-r h-0.5 from-[#22396B] via-white to-[#22396B]" />
-          <div className="mx-auto max-w-3xl text-center py-24">
-            <h2 className="mb-6 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+          <div className="mx-auto max-w-3xl text-center py-24 xs:py-6">
+            <h2 className="mb-6 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl xs:text-2xl xs:mx-4">
               Unite a miles de usuarios que ya disfrutan de sus beneficios
             </h2>
-            <p className="mb-10 text-lg md:text-xl text-white/90">
+            <p className="mb-10 text-lg md:text-xl text-white/90 xs:text-sm">
               Consultá tu credencial y descubrí todos los descuentos disponibles
             </p>
             <Button
               size="lg"
               asChild
-              className="bg-[#F3B229] text-[#00438A] hover:bg-[#F3B229]/90 font-bold px-10 py-6 text-lg rounded-2xl"
+              className="bg-[#F3B229] text-white hover:bg-[#F3B229]/90 font-bold px-10 py-6 text-lg rounded-2xl xs:py-4 xs:px-12"
             >
               <Link href="/registro">Registrarte</Link>
             </Button>

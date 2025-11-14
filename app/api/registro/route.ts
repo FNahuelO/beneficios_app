@@ -43,10 +43,11 @@ export async function POST(request: NextRequest) {
     })
 
     // Crear solicitud de registro
+    const nombreCompleto = `${validatedData.nombre} ${validatedData.apellido}`.trim()
     const registrationRequest = await prisma.registrationRequest.create({
       data: {
         userId: user.id,
-        nombreCompleto: validatedData.nombreCompleto,
+        nombreCompleto: nombreCompleto,
         tipoDocumento: validatedData.tipoDocumento,
         documento: validatedData.documento,
         telefono: validatedData.telefono,
@@ -59,7 +60,7 @@ export async function POST(request: NextRequest) {
     })
 
     // Enviar email de confirmación
-    const emailTemplate = emailRegistroRecibido(validatedData.nombreCompleto)
+    const emailTemplate = emailRegistroRecibido(nombreCompleto)
     await sendEmail({
       to: validatedData.email,
       subject: emailTemplate.subject,

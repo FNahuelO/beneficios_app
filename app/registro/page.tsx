@@ -29,6 +29,8 @@ export default function RegistroPage() {
   const [showPago, setShowPago] = useState(false)
   const [registrationId, setRegistrationId] = useState<string | null>(null)
   const [pagoLoading, setPagoLoading] = useState(false)
+  const [userDocumento, setUserDocumento] = useState<string | null>(null)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
   const { toast } = useToast()
   const router = useRouter()
 
@@ -79,6 +81,8 @@ export default function RegistroPage() {
 
       const responseData = await response.json()
       setRegistrationId(responseData.registrationId)
+      setUserDocumento(data.documento)
+      setUserEmail(data.email)
       setShowPago(true)
       setValuePago('registrationId', responseData.registrationId)
 
@@ -118,7 +122,13 @@ export default function RegistroPage() {
       })
 
       setTimeout(() => {
-        router.push('/credencial')
+        if (userDocumento && userEmail) {
+          router.push(
+            `/credencial?doc=${encodeURIComponent(userDocumento)}&email=${encodeURIComponent(userEmail)}`
+          )
+        } else {
+          router.push('/credencial')
+        }
       }, 2000)
     } catch (err: any) {
       toast({

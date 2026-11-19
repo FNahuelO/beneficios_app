@@ -2,48 +2,36 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* nexo brand */
+    --nexo-ink: #0a2a32;
+    --nexo-deep: #0b4f5c;
+    --nexo-teal: #14919b;
+    --nexo-aqua: #2ec4b6;
+    --nexo-mint: #d8f3ef;
+    --nexo-mist: #f3faf8;
+    --nexo-sand: #f7f4ef;
+    --nexo-coral: #e4572e;
+
+    --background: 168 33% 98%;
+    --foreground: 192 68% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 192 68% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --popover-foreground: 192 68% 12%;
+    --primary: 185 77% 28%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 168 40% 92%;
+    --secondary-foreground: 192 68% 12%;
+    --muted: 168 25% 94%;
+    --muted-foreground: 192 18% 40%;
+    --accent: 168 45% 90%;
+    --accent-foreground: 192 68% 12%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --border: 185 20% 86%;
+    --input: 185 20% 86%;
+    --ring: 185 77% 28%;
+    --radius: 0.75rem;
   }
 }
 
@@ -68,137 +56,9 @@
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
   --radius: var(--radius);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
 }
-
-@custom-media --xs (max-width: 480px);
-
-/* Utility classes for xs breakpoint */
-/* @media (max-width: 480px) {
-  .xs\:flex-col {
-    flex-direction: column !important;
-  }
-
-  .xs\:flex-row {
-    flex-direction: row !important;
-  }
-
-  .xs\:px-6 {
-    padding-left: 1.5rem !important;
-    padding-right: 1.5rem !important;
-  }
-
-  .xs\:py-4 {
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-  }
-
-  .xs\:py-12 {
-    padding-top: 3rem !important;
-    padding-bottom: 3rem !important;
-  }
-
-  .xs\:px-12 {
-    padding-left: 3rem !important;
-    padding-right: 3rem !important;
-  }
-
-  .xs\:px-4 {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-  }
-
-  .xs\:w-full {
-    width: 100% !important;
-  }
-
-  .xs\:w-1\/2 {
-    width: 50% !important;
-  }
-
-  .xs\:w-1\/4 {
-    width: 25% !important;
-  }
-
-  .xs\:h-1\.5 {
-    height: 0.375rem !important;
-  }
-
-  .xs\:h-full {
-    height: 100% !important;
-  }
-
-  .xs\:mb-4 {
-    margin-bottom: 1rem !important;
-  }
-
-  .xs\:mb-8 {
-    margin-bottom: 2rem !important;
-  }
-
-  .xs\:gap-4 {
-    gap: 1rem !important;
-  }
-
-  .xs\:gap-6 {
-    gap: 1.5rem !important;
-  }
-
-  .xs\:top-2 {
-    top: 0.5rem !important;
-  }
-
-  .xs\:bottom-2 {
-    bottom: 0.5rem !important;
-  }
-
-  .xs\:text-2xl {
-    font-size: 1.5rem !important;
-    line-height: 2rem !important;
-  }
-
-  .xs\:text-3xl {
-    font-size: 1.875rem !important;
-    line-height: 2.25rem !important;
-  }
-
-  .xs\:text-sm {
-    font-size: 0.875rem !important;
-    line-height: 1.25rem !important;
-  }
-
-  .xs\:text-base {
-    font-size: 1rem !important;
-    line-height: 1.5rem !important;
-  }
-
-  .xs\:text-xl {
-    font-size: 1.25rem !important;
-    line-height: 1.75rem !important;
-  }
-
-  .xs\:justify-center {
-    justify-content: center !important;
-  }
-
-  .xs\:bg-top {
-    background-position: top !important;
-  }
-
-  .xs\:p-6 {
-    padding: 1.5rem !important;
-  }
-
-  .xs\:mx-4 {
-    margin-left: 1rem !important;
-    margin-right: 1rem !important;
-  }
-
-  .xs\:py-6 {
-    padding-top: 1.5rem !important;
-    padding-bottom: 1.5rem !important;
-  }
-}
- */
 
 @layer base {
   * {
@@ -207,12 +67,116 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
   }
 }
 
 @layer components {
   .container {
     @apply mx-auto w-full px-4 sm:px-6 lg:px-8;
-    max-width: 1280px;
+    max-width: 1200px;
+  }
+
+  .nexo-atmosphere {
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 20%, rgba(46, 196, 182, 0.18), transparent 55%),
+      radial-gradient(ellipse 70% 50% at 90% 10%, rgba(20, 145, 155, 0.14), transparent 50%),
+      radial-gradient(ellipse 60% 40% at 70% 90%, rgba(11, 79, 92, 0.08), transparent 55%),
+      linear-gradient(165deg, #f3faf8 0%, #eef7f5 40%, #f7f4ef 100%);
+  }
+
+  .nexo-section-title {
+    @apply font-display text-3xl font-bold tracking-tight text-[var(--nexo-ink)] sm:text-4xl;
+  }
+
+  .nexo-section-lead {
+    @apply mt-3 max-w-2xl text-base text-[var(--nexo-deep)]/75 sm:text-lg;
+  }
+
+  .nexo-btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-[var(--nexo-deep)] px-6 py-3 text-sm font-semibold text-white transition duration-300 hover:bg-[var(--nexo-ink)] hover:shadow-lg hover:shadow-[var(--nexo-teal)]/20;
+  }
+
+  .nexo-btn-secondary {
+    @apply inline-flex items-center justify-center rounded-xl border border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition duration-300 hover:bg-white/20;
+  }
+}
+
+/* Motion */
+@keyframes nexo-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes nexo-ken {
+  from {
+    transform: scale(1.08) translate(0, 0);
+  }
+  to {
+    transform: scale(1) translate(-1%, -0.5%);
+  }
+}
+
+@keyframes nexo-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes nexo-draw {
+  from {
+    stroke-dashoffset: 120;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.nexo-animate-in {
+  animation: nexo-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.nexo-animate-in-delay-1 {
+  animation-delay: 0.12s;
+}
+
+.nexo-animate-in-delay-2 {
+  animation-delay: 0.24s;
+}
+
+.nexo-animate-in-delay-3 {
+  animation-delay: 0.36s;
+}
+
+.nexo-hero-image {
+  animation: nexo- ken 18s ease-out forwards;
+}
+
+.nexo-float {
+  animation: nexo-float 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nexo-animate-in,
+  .nexo-hero-image,
+  .nexo-float {
+    animation: none !important;
   }
 }

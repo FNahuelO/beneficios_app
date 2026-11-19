@@ -1,239 +1,328 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import Image from 'next/image'
+import { NexoLogo } from '@/components/brand/nexo-logo'
 import { prisma } from '@/lib/prisma'
 import { BenefitCard } from '@/components/beneficios/benefit-card'
-import { ArrowRight, Star, CreditCard, Heart, Shield, Users } from 'lucide-react'
+import {
+  Stethoscope,
+  Accessibility,
+  Scale,
+  Store,
+  GraduationCap,
+  Wrench,
+  Plane,
+  Pill,
+  MapPin,
+  ArrowRight,
+} from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
+const servicios = [
+  {
+    icon: Stethoscope,
+    title: 'Telemedicina con 5 especialidades',
+    description: 'Consultá con profesionales a distancia, cuando lo necesites.',
+  },
+  {
+    icon: Accessibility,
+    title: 'Telemedicina con inclusión',
+    description: 'Atención pensada para todas las personas, sin barreras.',
+  },
+  {
+    icon: Scale,
+    title: 'Asesoría legal',
+    description: 'Orientación legal clara para resolver lo que te preocupa.',
+  },
+  {
+    icon: Store,
+    title: '+1000 comercios adheridos',
+    description: 'Descuentos en negocios de todo el país, cerca tuyo.',
+  },
+  {
+    icon: GraduationCap,
+    title: 'Cursos internacionales',
+    description: 'Formate con descuentos en capacitaciones de nivel global.',
+  },
+  {
+    icon: Wrench,
+    title: 'Cursos de oficio',
+    description: 'Aprendé un oficio con beneficios exclusivos para socios.',
+  },
+]
+
+const destacados = [
+  {
+    icon: Pill,
+    value: '50%',
+    label: 'Descuento en farmacias',
+    detail: 'Ahorrá en medicamentos y productos de salud.',
+  },
+  {
+    icon: Plane,
+    value: '30%',
+    label: 'Turismo a Brasil y Chile',
+    detail: 'Descuentos de hasta un 30% en experiencias de viaje.',
+  },
+  {
+    icon: MapPin,
+    value: 'AR',
+    label: 'Para todo Argentina',
+    detail: 'Cobertura nacional: tu nexo de beneficios donde estés.',
+  },
+]
+
 export default async function HomePage() {
-  // Obtener beneficios destacados
-  const beneficiosDestacados = await prisma.benefit.findMany({
-    where: { destacado: true },
-    include: {
-      categories: {
-        include: {
-          category: true,
+  let beneficiosDestacados: Awaited<ReturnType<typeof prisma.benefit.findMany>> = []
+
+  try {
+    beneficiosDestacados = await prisma.benefit.findMany({
+      where: { destacado: true },
+      include: {
+        categories: {
+          include: {
+            category: true,
+          },
         },
       },
-    },
-    take: 6,
-    orderBy: { createdAt: 'desc' },
-  })
-
-  const features = [
-    {
-      icon: Star,
-      title: 'Descuentos Exclusivos',
-      description: 'Accedé a ofertas especiales en cientos de comercios adheridos.',
-    },
-    {
-      icon: CreditCard,
-      title: 'Credencial Digital',
-      description: 'Tu credencial siempre disponible en tu celular.',
-    },
-    {
-      icon: Heart,
-      title: 'Salud y Bienestar',
-      description: 'Beneficios en medicina, odontología, gimnasios y más.',
-    },
-    {
-      icon: Shield,
-      title: 'Seguro y Confiable',
-      description: 'Tu información protegida con los más altos estándares.',
-    },
-  ]
+      take: 6,
+      orderBy: { createdAt: 'desc' },
+    })
+  } catch {
+    beneficiosDestacados = []
+  }
 
   return (
-    <div className="flex flex-col bg-[#EFF7FE]">
-      {/* Hero Section - Inspirado en Boca Juniors */}
-      <section className="flex flex-col justify-center items-center relative overflow-hidden bg-linear-to-br from-blue-900 via-blue-800 to-blue-700 text-white h-screen">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aCBkPSJNMzAgMzBsMzAgMzBIMGwzMC0zMHoiIGZpbGw9IiMwMDA')] opacity-10" />
-        <div className="container relative py-20 md:py-32">
-          <div className="mx-auto max-w-3xl text-center">
-            <h1 className="mb-6 text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-              Tus Beneficios,
-            </h1>
-            <h2 className="mb-6 text-5xl font-extrabold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl text-yellow-500">
-              Tu Estilo
-            </h2>
-            <p className="mb-8 text-lg text-blue-100 sm:text-xl">
-              Descuentos exclusivos en salud, gastronomía, educación, deportes y mucho más.
-              Registrate y empezá a disfrutar de todos los beneficios.
-            </p>
-            <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-              <Button size="lg" asChild className="bg-[#F3B229] text-white hover:bg-[#F3B229]/80">
-                <Link href="/registro">Registrate</Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                asChild
-                className="border-white text-white bg-[#00438A] hover:bg-white/10"
-              >
-                <Link href="/beneficios">Ver Beneficios</Link>
-              </Button>
-            </div>
+    <div className="flex flex-col">
+      {/* Hero — una sola composición */}
+      <section className="relative min-h-[100svh] overflow-hidden text-white">
+        <div className="absolute inset-0">
+          <Image
+            src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=2400&q=80"
+            alt="Profesional de la salud en consulta de telemedicina"
+            fill
+            priority
+            className="nexo-hero-image object-cover object-center"
+            sizes="100vw"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(105deg, rgba(10,42,50,0.92) 0%, rgba(11,79,92,0.78) 42%, rgba(10,42,50,0.45) 70%, rgba(10,42,50,0.25) 100%)',
+            }}
+          />
+          <div
+            className="absolute inset-0 opacity-40"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.12) 1px, transparent 0)',
+              backgroundSize: '28px 28px',
+            }}
+          />
+        </div>
+
+        <div className="container relative flex min-h-[100svh] flex-col justify-center py-24 md:py-28">
+          <div className="nexo-animate-in nexo-float max-w-xl">
+            <NexoLogo
+              variant="light"
+              markClassName="h-16 w-16 md:h-20 md:w-20"
+              wordmarkClassName="text-6xl md:text-7xl lg:text-8xl text-white"
+            />
+          </div>
+
+          <h1 className="nexo-animate-in nexo-animate-in-delay-1 font-display mt-8 max-w-2xl text-2xl font-semibold leading-snug tracking-tight text-white/95 sm:text-3xl md:text-4xl">
+            Salud y beneficios conectados, para todo el país
+          </h1>
+
+          <p className="nexo-animate-in nexo-animate-in-delay-2 mt-5 max-w-lg text-base text-white/80 sm:text-lg">
+            Telemedicina, asesoría legal y descuentos en comercios, cursos, farmacias y turismo —
+            un solo nexo para vos.
+          </p>
+
+          <div className="nexo-animate-in nexo-animate-in-delay-3 mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Link
+              href="/registro"
+              className="inline-flex items-center justify-center rounded-xl bg-[var(--nexo-aqua)] px-7 py-3.5 text-sm font-semibold text-[var(--nexo-ink)] transition duration-300 hover:bg-white hover:shadow-lg hover:shadow-teal-500/30"
+            >
+              Sumate a nexo
+            </Link>
+            <Link
+              href="/#servicios"
+              className="nexo-btn-secondary"
+            >
+              Conocer servicios
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="relative overflow-hidden py-8 not-sm:py-12 md:py-16 md:min-h-[70vh] flex flex-col items-center justify-center">
-        {/* Imagen de fondo de la Bombonera */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: 'url(/bombonera.png)' }}
-        />
-
-        {/* Overlay semi-transparente oscuro */}
-        <div className="absolute inset-0 bg-blue-900/80" />
-
-        {/* Franja superior amarilla y azul */}
-        <div className="absolute top-0 left-0 right-0 h-1 not-sm:h-1.5 bg-[#F3B229]" />
-        <div className="absolute top-1 not-sm:top-2 left-0 right-0 h-1 not-sm:h-1.5 bg-[#00438A]" />
-
-        <div className="container relative px-4 not-sm:px-6">
-          <div className="mb-6 not-sm:mb-8 md:mb-12 text-center">
-            <h2 className="mb-3 not-sm:mb-4 text-2xl not-sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
-              ¿Por qué elegir Beneficios?
-            </h2>
-            <p className="mx-auto max-w-2xl text-sm not-sm:text-base text-[#FFC958] px-4">
-              Todo lo que necesitás para aprovechar al máximo tus descuentos y ventajas exclusivas
+      {/* Servicios */}
+      <section id="servicios" className="nexo-atmosphere relative scroll-mt-20 py-20 md:py-28">
+        <div className="container">
+          <div className="max-w-2xl">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--nexo-teal)]">
+              Qué incluye
+            </p>
+            <h2 className="nexo-section-title">Todo lo que conecta nexo</h2>
+            <p className="nexo-section-lead">
+              Una membresía pensada para cuidarte, formarte y ahorrar — en toda Argentina.
             </p>
           </div>
 
-          <div className="grid gap-4 not-sm:gap-6 grid-cols-1 lg:grid-cols-4 not-sm:flex not-sm:flex-col not-sm:justify-center not-sm:items-center">
-            {features.map((feature, index) => {
-              const Icon = feature.icon
+          <ul className="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+            {servicios.map((servicio) => {
+              const Icon = servicio.icon
               return (
-                <div
-                  key={index}
-                  className="relative flex flex-col rounded-lg bg-blue-900/60 backdrop-blur-sm p-4 not-sm:p-6 pt-3 pb-10"
-                >
-                  <div className="mb-3 not-sm:mb-4 h-12 w-12 not-sm:h-16 not-sm:w-16 flex items-center justify-center rounded-lg bg-[#00438A] shadow self-end">
-                    <Icon className="h-6 w-6 not-sm:h-8 not-sm:w-8 text-[#F3B229]" />
+                <li key={servicio.title} className="group">
+                  <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--nexo-deep)] text-[var(--nexo-aqua)] transition duration-300 group-hover:scale-105 group-hover:bg-[var(--nexo-ink)]">
+                    <Icon className="h-5 w-5" strokeWidth={2} />
                   </div>
-                  <h3 className="mb-3 not-sm:mb-4 text-lg not-sm:text-xl font-bold text-white text-start">
-                    {feature.title}
+                  <h3 className="font-display text-xl font-semibold text-[var(--nexo-ink)]">
+                    {servicio.title}
                   </h3>
-
-                  <p className="text-white/90 text-xs not-sm:text-sm leading-relaxed">
-                    {feature.description}
+                  <p className="mt-2 text-[var(--nexo-deep)]/70 leading-relaxed">
+                    {servicio.description}
                   </p>
-                  <div className="absolute bottom-0 left-0 right-0 h-1.5 not-sm:h-2 bg-[#F3B229] rounded-b-3xl" />
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      </section>
+
+      {/* Destacados de ahorro */}
+      <section className="relative overflow-hidden bg-[var(--nexo-ink)] py-20 text-white md:py-24">
+        <div
+          className="pointer-events-none absolute -right-20 top-0 h-80 w-80 rounded-full opacity-30 blur-3xl"
+          style={{ background: 'radial-gradient(circle, #2ec4b6, transparent 70%)' }}
+        />
+        <div className="container relative">
+          <div className="max-w-2xl">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--nexo-aqua)]">
+              Ahorros clave
+            </p>
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+              Beneficios que se sienten de verdad
+            </h2>
+            <p className="mt-3 max-w-xl text-white/65">
+              Farmacia, turismo y cobertura nacional: el valor de nexo, claro y concreto.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-10 md:grid-cols-3">
+            {destacados.map((item) => {
+              const Icon = item.icon
+              return (
+                <div key={item.label} className="border-t border-white/15 pt-6">
+                  <Icon className="mb-4 h-6 w-6 text-[var(--nexo-aqua)]" />
+                  <p className="font-display text-4xl font-bold tracking-tight text-[var(--nexo-aqua)] sm:text-5xl">
+                    {item.value}
+                  </p>
+                  <h3 className="mt-3 text-lg font-semibold">{item.label}</h3>
+                  <p className="mt-2 text-sm text-white/60">{item.detail}</p>
                 </div>
               )
             })}
           </div>
         </div>
-        <div className="absolute bottom-1 not-sm:bottom-2 left-0 right-0 h-1 not-sm:h-1.5 bg-[#00438A]" />
-        <div className="absolute bottom-0 left-0 right-0 h-1 not-sm:h-1.5 bg-[#F3B229]" />
       </section>
-      {/* Beneficios Destacados */}
-      <section className="py-16 ">
-        <div className="container">
-          <div className="mb-12 flex items-center justify-between">
-            <div className="w-full">
-              <h2 className="mb-2 text-3xl font-bold tracking-tight text-[#00438A]">
-                Beneficios Destacados
-              </h2>
-              <div className="h-0.5 w-11/12 bg-[#A4A4A447] rounded-full" />
-            </div>
-            {/* <Button variant="outline" asChild className="hidden sm:flex">
-              <Link href="/beneficios">
-                Ver todos
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button> */}
-          </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {beneficiosDestacados.map((beneficio) => (
-              <BenefitCard key={beneficio.id} benefit={beneficio} />
-            ))}
-          </div>
-
-          <div className="mt-8 text-center sm:hidden">
-            <Button variant="outline" asChild>
-              <Link href="/beneficios">
-                Ver todos los beneficios
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
+      {/* Telemedicina highlight con imagen */}
+      <section className="relative min-h-[70vh] overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?auto=format&fit=crop&w=2000&q=80"
+          alt="Atención médica cercana y accesible"
+          fill
+          className="object-cover"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-[var(--nexo-ink)]/75" />
+        <div className="container relative flex min-h-[70vh] flex-col justify-end py-16 md:py-20">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[var(--nexo-aqua)]">
+            Telemedicina
+          </p>
+          <h2 className="font-display max-w-xl text-3xl font-bold text-white sm:text-4xl md:text-5xl">
+            Cinco especialidades y atención con inclusión
+          </h2>
+          <p className="mt-4 max-w-md text-white/75">
+            Hablá con profesionales certificados por teléfono o videollamada, las 24 horas.
+          </p>
+          <Link
+            href="/telemedicina"
+            className="mt-8 inline-flex w-fit items-center gap-2 rounded-xl bg-[var(--nexo-aqua)] px-6 py-3 text-sm font-semibold text-[var(--nexo-ink)] transition hover:bg-white"
+          >
+            Ir a telemedicina
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
 
-      {/* Banner UNITE */}
-      <section
-        className="relative overflow-hidden bg-linear-to-br from-[#22396B] via-[#003E80] to-[#22396B] py-12 md:py-16 w-11/12 mx-auto translate-y-1/2 z-10"
-        style={{
-          border: '1px solid',
-          borderImage: 'linear-gradient(to right, #4A608F, #151C29, #4A608F) 1',
-        }}
-      >
-        {/* Imagen de fondo en el lado derecho */}
-        <div
-          className="absolute right-0 top-0 bottom-0 w-1/2 bg-contain bg-right bg-no-repeat not-sm:bg-top not-sm:w-full not-sm:h-full"
-          style={{ backgroundImage: 'url(/banner.png)' }}
-        />
+      {/* Beneficios destacados de DB */}
+      {beneficiosDestacados.length > 0 && (
+        <section className="nexo-atmosphere py-20 md:py-24">
+          <div className="container">
+            <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2 className="nexo-section-title">Beneficios destacados</h2>
+                <p className="nexo-section-lead">Ofertas activas para socios nexo.</p>
+              </div>
+              <Link
+                href="/beneficios"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--nexo-deep)] transition hover:text-[var(--nexo-ink)]"
+              >
+                Ver todos
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
 
-        {/* Overlay con degradado de opacidad desde la izquierda */}
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {beneficiosDestacados.map((beneficio) => (
+                <BenefitCard key={beneficio.id} benefit={beneficio as any} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* CTA final */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[var(--nexo-deep)] via-[var(--nexo-teal)] to-[var(--nexo-aqua)] py-24 text-white">
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="pointer-events-none absolute inset-0 opacity-30"
           style={{
-            background:
-              'linear-gradient(to right, #22396B 40%, #22396B 50%, rgba(34, 57, 107, 0.8) 60%, rgba(34, 57, 107, 0.5) 80%, rgba(34, 57, 107, 0.2) 90%, transparent 100%)',
+            backgroundImage:
+              'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.25) 1px, transparent 0)',
+            backgroundSize: '24px 24px',
           }}
         />
-
-        <div className="container relative">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 not-sm:gap-4">
-            <div className="flex-1 text-white z-10">
-              <h2 className="mb-4 text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight not-sm:text-2xl">
-                UNITE
-              </h2>
-              <p className="text-lg md:text-xl text-white/90 not-sm:text-sm">
-                Empezá a disfrutar de experiencias exclusivas pensadas para vos
-              </p>
-            </div>
-            <div className="shrink-0 z-10">
-              <Button
-                size="lg"
-                asChild
-                className="bg-[#F3B229] text-white hover:bg-[#F3B229]/90 font-bold px-10 py-6 text-md rounded-2xl not-sm:py-4 not-sm:px-12"
-              >
-                <Link href="/registro">Registrarte</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative overflow-hidden bg-linear-to-br from-[#22396B] via-[#003E80] to-[#22396B] py-20 md:py-28 text-white h-[80vh] flex flex-col items-center justify-center">
-        <div className="absolute top-0 left-0 right-0 h-1.5 bg-[#F3B229]" />
-
-        <div className="container">
-          <div className="bg-linear-to-r h-0.5 from-[#22396B] via-white to-[#22396B]" />
-          <div className="mx-auto max-w-3xl text-center py-24 not-sm:py-6">
-            <h2 className="mb-6 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl not-sm:text-2xl not-sm:mx-4">
-              Unite a miles de usuarios que ya disfrutan de sus beneficios
-            </h2>
-            <p className="mb-10 text-lg md:text-xl text-white/90 not-sm:text-sm">
-              Consultá tu credencial y descubrí todos los descuentos disponibles
-            </p>
-            <Button
-              size="lg"
-              asChild
-              className="bg-[#F3B229] text-white hover:bg-[#F3B229]/90 font-bold px-10 py-6 text-lg rounded-2xl not-sm:py-4 not-sm:px-12"
+        <div className="container relative text-center">
+          <NexoLogo
+            variant="light"
+            className="mx-auto justify-center"
+            markClassName="h-10 w-10"
+            wordmarkClassName="text-3xl text-white"
+          />
+          <h2 className="font-display mx-auto mt-6 max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+            Empezá a disfrutar nexo hoy
+          </h2>
+          <p className="mx-auto mt-4 max-w-lg text-white/85">
+            Registrate, activá tu credencial digital y accedé a salud y beneficios en toda
+            Argentina.
+          </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              href="/registro"
+              className="inline-flex items-center justify-center rounded-xl bg-[var(--nexo-ink)] px-8 py-3.5 text-sm font-semibold text-white transition hover:bg-black"
             >
-              <Link href="/registro">Registrarte</Link>
-            </Button>
+              Registrarme
+            </Link>
+            <Link
+              href="/credencial"
+              className="inline-flex items-center justify-center rounded-xl border border-white/40 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+            >
+              Consultar credencial
+            </Link>
           </div>
-          <div className="bg-linear-to-r h-0.5 from-[#22396B] via-white to-[#22396B]" />
         </div>
       </section>
     </div>

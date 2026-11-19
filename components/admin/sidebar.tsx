@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { signOut, useSession } from 'next-auth/react'
+import { NexoLogo } from '@/components/brand/nexo-logo'
 
 const navItems = [
   {
@@ -61,11 +62,8 @@ export function AdminSidebar() {
   return (
     <div className="flex h-full flex-col border-r bg-muted/10">
       <div className="p-6">
-        <Link href="/admin" className="flex items-center space-x-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--nexo-deep)] text-[var(--nexo-aqua)]">
-            <span className="font-display text-lg font-bold lowercase">n</span>
-          </div>
-          <span className="font-display font-bold lowercase tracking-tight">nexo admin</span>
+        <Link href="/admin" className="flex items-center">
+          <NexoLogo height={36} />
         </Link>
       </div>
 

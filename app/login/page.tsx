@@ -73,7 +73,7 @@ export default function LoginPage() {
           />
           <div className="absolute inset-0 bg-[var(--nexo-ink)]/50" />
           <div className="absolute bottom-10 left-10">
-            <NexoLogo variant="light" markClassName="h-10 w-10" wordmarkClassName="text-3xl text-white" />
+            <NexoLogo height={64} className="rounded-lg shadow-md" />
             <p className="mt-3 max-w-xs text-sm text-white/70">Panel de administración</p>
           </div>
         </div>
@@ -81,7 +81,7 @@ export default function LoginPage() {
         <div className="flex w-full flex-col items-center justify-center gap-4 bg-white p-8 lg:w-1/2 lg:p-12">
           <div className="mx-auto w-full max-w-md">
             <Link href="/" className="mb-6 inline-flex lg:hidden">
-              <NexoLogo markClassName="h-8 w-8" wordmarkClassName="text-xl" />
+              <NexoLogo height={44} />
             </Link>
             <h1 className="font-display mb-2 text-3xl font-bold text-[var(--nexo-ink)]">
               Iniciar sesión

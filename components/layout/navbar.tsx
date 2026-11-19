@@ -25,7 +25,7 @@ export function Navbar() {
       <div className="container flex h-16 items-center">
         <div className="mr-8 flex items-center">
           <Link href="/" className="flex items-center" aria-label="nexo inicio">
-            <NexoLogo markClassName="h-8 w-8" wordmarkClassName="text-xl" />
+            <NexoLogo height={40} priority />
           </Link>
         </div>
 

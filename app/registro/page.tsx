@@ -159,26 +159,26 @@ export default function RegistroPage() {
 
   if (showPago && registrationId) {
     return (
-      <div className="min-h-screen bg-white py-12">
+      <div className="min-h-screen nexo-atmosphere py-12">
         <div className="container max-w-2xl px-4">
           {/* Header */}
           <div className="mb-8 text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-600">
               <CheckCircle className="h-8 w-8" />
             </div>
-            <h1 className="mb-2 text-4xl font-bold tracking-tight text-[#00438A]">
+            <h1 className="mb-2 text-4xl font-bold tracking-tight text-[var(--nexo-deep)]">
               Registro Exitoso
             </h1>
-            <p className="text-lg text-[#00438A]">Completa el pago para finalizar tu registro</p>
+            <p className="text-lg text-[var(--nexo-deep)]">Completa el pago para finalizar tu registro</p>
           </div>
 
           {/* Formulario de Pago */}
           <Card className="shadow-lg">
-            <div className="h-7 rounded-t-lg bg-[#103F79]"></div>
+            <div className="h-7 rounded-t-lg bg-[var(--nexo-ink)]"></div>
             <CardHeader>
               <div className="flex items-center gap-2">
-                <CreditCard className="h-5 w-5 text-[#00438A]" />
-                <CardTitle className="text-xl text-[#00438A]">Datos de Pago</CardTitle>
+                <CreditCard className="h-5 w-5 text-[var(--nexo-deep)]" />
+                <CardTitle className="text-xl text-[var(--nexo-deep)]">Datos de Pago</CardTitle>
               </div>
               <CardDescription>
                 <div className="flex items-center gap-2 mt-2">
@@ -190,7 +190,7 @@ export default function RegistroPage() {
             <CardContent>
               <form onSubmit={handleSubmitPago(onSubmitPago)} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="numeroTarjeta" className="text-[#00438A]">
+                  <Label htmlFor="numeroTarjeta" className="text-[var(--nexo-deep)]">
                     Número de Tarjeta
                   </Label>
                   <Input
@@ -211,7 +211,7 @@ export default function RegistroPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="nombreTitular" className="text-[#00438A]">
+                  <Label htmlFor="nombreTitular" className="text-[var(--nexo-deep)]">
                     Nombre del Titular
                   </Label>
                   <Input
@@ -231,7 +231,7 @@ export default function RegistroPage() {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="fechaVencimiento" className="text-[#00438A]">
+                    <Label htmlFor="fechaVencimiento" className="text-[var(--nexo-deep)]">
                       Fecha de Vencimiento
                     </Label>
                     <Input
@@ -254,7 +254,7 @@ export default function RegistroPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="cvv" className="text-[#00438A]">
+                    <Label htmlFor="cvv" className="text-[var(--nexo-deep)]">
                       CVV
                     </Label>
                     <Input
@@ -283,7 +283,7 @@ export default function RegistroPage() {
                 {/* Botón */}
                 <Button
                   type="submit"
-                  className="w-full bg-[#F3B229] text-white hover:bg-[#F3B229]/80"
+                  className="w-full bg-[var(--nexo-aqua)] text-[var(--nexo-ink)] hover:bg-[var(--nexo-teal)] hover:text-white"
                   size="lg"
                   disabled={pagoLoading}
                 >
@@ -298,27 +298,29 @@ export default function RegistroPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white py-12">
+    <div className="min-h-screen nexo-atmosphere py-12">
       <div className="container max-w-4xl px-4">
         {/* Header */}
         <div className="mb-8 text-center">
-          <h1 className="mb-2 text-4xl font-bold tracking-tight text-[#00438A]">Registrate</h1>
-          <p className="text-lg text-[#00438A]">
-            Completa el formulario para acceder a todos los beneficios
+          <h1 className="font-display mb-2 text-4xl font-bold tracking-tight text-[var(--nexo-deep)]">
+            Sumate a nexo
+          </h1>
+          <p className="text-lg text-[var(--nexo-deep)]">
+            Completá el formulario para acceder a salud, telemedicina y beneficios
           </p>
         </div>
 
         {/* Form Container */}
         <div className="rounded-lg bg-white shadow-lg">
           {/* Barra azul superior */}
-          <div className="h-7 rounded-t-lg bg-[#103F79]"></div>
+          <div className="h-7 rounded-t-lg bg-[var(--nexo-ink)]"></div>
 
           <div className="p-8">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               {/* Datos Personales */}
               <div className="space-y-4">
                 <div>
-                  <h2 className="text-xl font-semibold text-[#00438A]">Datos Personales</h2>
+                  <h2 className="text-xl font-semibold text-[var(--nexo-deep)]">Datos Personales</h2>
                   <p className="text-sm text-gray-500">Todos los campos son obligatorios</p>
                 </div>
 
@@ -326,7 +328,7 @@ export default function RegistroPage() {
                   {/* Columna izquierda */}
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="nombre" className="text-[#00438A]">
+                      <Label htmlFor="nombre" className="text-[var(--nexo-deep)]">
                         Nombre
                       </Label>
                       <Input
@@ -341,7 +343,7 @@ export default function RegistroPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="tipoDocumento" className="text-[#00438A]">
+                      <Label htmlFor="tipoDocumento" className="text-[var(--nexo-deep)]">
                         Tipo de Documento
                       </Label>
                       <Select
@@ -364,7 +366,7 @@ export default function RegistroPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="telefono" className="text-[#00438A]">
+                      <Label htmlFor="telefono" className="text-[var(--nexo-deep)]">
                         Teléfono
                       </Label>
                       <Input
@@ -382,7 +384,7 @@ export default function RegistroPage() {
                   {/* Columna derecha */}
                   <div className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="apellido" className="text-[#00438A]">
+                      <Label htmlFor="apellido" className="text-[var(--nexo-deep)]">
                         Apellido
                       </Label>
                       <Input
@@ -397,7 +399,7 @@ export default function RegistroPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="documento" className="text-[#00438A]">
+                      <Label htmlFor="documento" className="text-[var(--nexo-deep)]">
                         Número de Documento
                       </Label>
                       <Input
@@ -412,7 +414,7 @@ export default function RegistroPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-[#00438A]">
+                      <Label htmlFor="email" className="text-[var(--nexo-deep)]">
                         Email
                       </Label>
                       <Input
@@ -432,10 +434,10 @@ export default function RegistroPage() {
 
               {/* Dirección */}
               <div className="space-y-4">
-                <h2 className="text-xl font-semibold text-[#00438A]">Dirección</h2>
+                <h2 className="text-xl font-semibold text-[var(--nexo-deep)]">Dirección</h2>
 
                 <div className="space-y-2">
-                  <Label htmlFor="domicilio" className="text-[#00438A]">
+                  <Label htmlFor="domicilio" className="text-[var(--nexo-deep)]">
                     Domicilio
                   </Label>
                   <Input
@@ -451,7 +453,7 @@ export default function RegistroPage() {
 
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div className="space-y-2">
-                    <Label htmlFor="ciudad" className="text-[#00438A]">
+                    <Label htmlFor="ciudad" className="text-[var(--nexo-deep)]">
                       Ciudad
                     </Label>
                     <Input
@@ -466,7 +468,7 @@ export default function RegistroPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="provincia" className="text-[#00438A]">
+                    <Label htmlFor="provincia" className="text-[var(--nexo-deep)]">
                       Provincia
                     </Label>
                     <Input
@@ -481,7 +483,7 @@ export default function RegistroPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="pais" className="text-[#00438A]">
+                    <Label htmlFor="pais" className="text-[var(--nexo-deep)]">
                       País
                     </Label>
                     <Input
@@ -509,7 +511,7 @@ export default function RegistroPage() {
               {/* Botón */}
               <Button
                 type="submit"
-                className="w-full bg-[#F3B229] text-white hover:bg-[#F3B229]/80"
+                className="w-full bg-[var(--nexo-aqua)] text-[var(--nexo-ink)] hover:bg-[var(--nexo-teal)] hover:text-white"
                 size="lg"
                 disabled={loading}
               >

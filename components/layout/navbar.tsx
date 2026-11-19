@@ -3,9 +3,10 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Menu, X, User } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
+import { NexoLogo } from '@/components/brand/nexo-logo'
 
 export function Navbar() {
   const pathname = usePathname()
@@ -13,33 +14,33 @@ export function Navbar() {
 
   const navLinks = [
     { href: '/', label: 'Inicio' },
+    { href: '/#servicios', label: 'Servicios' },
     { href: '/beneficios', label: 'Beneficios' },
-    { href: '/credencial', label: 'Mi Credencial' },
     { href: '/telemedicina', label: 'Telemedicina' },
+    { href: '/credencial', label: 'Mi Credencial' },
   ]
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    <nav className="sticky top-0 z-50 w-full border-b border-[var(--nexo-deep)]/10 bg-[var(--nexo-mist)]/90 backdrop-blur-md">
       <div className="container flex h-16 items-center">
         <div className="mr-8 flex items-center">
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <span className="text-xl font-bold">B</span>
-            </div>
-            <span className="hidden font-bold sm:inline-block">Beneficios</span>
+          <Link href="/" className="flex items-center" aria-label="nexo inicio">
+            <NexoLogo markClassName="h-8 w-8" wordmarkClassName="text-xl" />
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
         <div className="hidden flex-1 items-center justify-between md:flex">
-          <nav className="flex items-center space-x-6 text-sm font-medium">
+          <nav className="flex items-center gap-7 text-sm font-medium">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'transition-colors hover:text-foreground/80',
-                  pathname === link.href ? 'text-foreground' : 'text-foreground/60'
+                  'transition-colors hover:text-[var(--nexo-deep)]',
+                  pathname === link.href ||
+                    (link.href !== '/' && pathname.startsWith(link.href.split('#')[0]) && link.href !== '/#servicios')
+                    ? 'text-[var(--nexo-ink)]'
+                    : 'text-[var(--nexo-ink)]/55'
                 )}
               >
                 {link.label}
@@ -47,43 +48,42 @@ export function Navbar() {
             ))}
           </nav>
 
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              className="bg-[#F3B229] text-white hover:bg-[#01448C] hover:text-white border-none"
-              asChild
-            >
-              <Link href="/registro">Registrarse</Link>
-            </Button>
-          </div>
+          <Button
+            asChild
+            className="rounded-xl border-none bg-[var(--nexo-deep)] text-white hover:bg-[var(--nexo-ink)]"
+          >
+            <Link href="/registro">Sumate a nexo</Link>
+          </Button>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button className="ml-auto md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+        <button
+          className="ml-auto text-[var(--nexo-ink)] md:hidden"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+        >
           {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </div>
 
-      {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="border-t md:hidden">
-          <nav className="container grid gap-2 py-4">
+        <div className="border-t border-[var(--nexo-deep)]/10 md:hidden">
+          <nav className="container grid gap-1 py-4">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  'px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md',
-                  pathname === link.href ? 'bg-accent text-accent-foreground' : 'text-foreground/60'
-                )}
+                className="rounded-lg px-4 py-2.5 text-sm font-medium text-[var(--nexo-ink)]/80 transition-colors hover:bg-[var(--nexo-mint)]"
               >
                 {link.label}
               </Link>
             ))}
-            <div className="mt-4 space-y-2 px-4">
-              <Button variant="outline" className="w-full bg-[#F3B229]" asChild>
-                <Link href="/registro">Registrarse</Link>
+            <div className="mt-3 px-4">
+              <Button
+                asChild
+                className="w-full rounded-xl bg-[var(--nexo-deep)] text-white hover:bg-[var(--nexo-ink)]"
+              >
+                <Link href="/registro">Sumate a nexo</Link>
               </Button>
             </div>
           </nav>

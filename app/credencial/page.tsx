@@ -249,7 +249,7 @@ export default function CredencialPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#00438A] py-12 px-4 flex flex-col items-center justify-center">
+    <div className="min-h-screen bg-[var(--nexo-ink)] py-12 px-4 flex flex-col items-center justify-center">
       <div className="container max-w-4xl mx-auto">
         {/* Título principal */}
         <div className="mb-12 text-center">
@@ -262,8 +262,8 @@ export default function CredencialPage() {
         </div>
 
         {/* Card del formulario */}
-        <Card className="mb-8 bg-[#8DB1FF26] border border-t-0 border-[#8DB1FF] shadow-xl relative ">
-          <div className="absolute top-0 left-0 right-0 h-2 bg-[#F3B229] rounded-t-lg" />
+        <Card className="mb-8 bg-[rgba(46,196,182,0.12)] border border-t-0 border-[var(--nexo-aqua)] shadow-xl relative ">
+          <div className="absolute top-0 left-0 right-0 h-2 bg-[var(--nexo-aqua)] rounded-t-lg" />
 
           <CardHeader>
             <CardTitle className="text-white text-2xl">Datos de Consulta</CardTitle>
@@ -307,7 +307,7 @@ export default function CredencialPage() {
               <div className="flex justify-center w-full border-t px-6 pt-6">
                 <Button
                   type="submit"
-                  className="w-full bg-[#F3B229] text-white hover:bg-[#F3B229]/90 font-bold py-6 text-lg rounded-2xl"
+                  className="w-full bg-[var(--nexo-aqua)] text-[var(--nexo-ink)] hover:bg-[var(--nexo-teal)] hover:text-white font-bold py-6 text-lg rounded-2xl"
                   disabled={loading}
                 >
                   {loading ? 'Consultando...' : 'Consultar Credencial'}
@@ -325,7 +325,7 @@ export default function CredencialPage() {
         )}
 
         {credential && (
-          <Card className="bg-[#1a4d7a] border-none shadow-xl">
+          <Card className="bg-[var(--nexo-deep)] border-none shadow-xl">
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div>
@@ -376,7 +376,7 @@ export default function CredencialPage() {
                       </div>
                       <Button
                         onClick={handleDownloadPDF}
-                        className="bg-[#F3B229] text-white hover:bg-[#F3B229]/90 font-bold rounded-xl"
+                        className="bg-[var(--nexo-aqua)] text-[var(--nexo-ink)] hover:bg-[var(--nexo-teal)] hover:text-white font-bold rounded-xl"
                       >
                         <Download className="mr-2 h-4 w-4" />
                         Descargar PDF

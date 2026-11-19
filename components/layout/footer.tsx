@@ -1,105 +1,81 @@
 import Link from 'next/link'
-import { Facebook, Twitter, Instagram, Mail, Phone } from 'lucide-react'
+import { Instagram, Mail, Phone } from 'lucide-react'
+import { NexoLogo } from '@/components/brand/nexo-logo'
 
 export function Footer() {
   return (
-    <footer className="border-t bg-muted/50">
-      <div className="container py-12">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-          {/* Columna 1 - Logo y descripción */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <span className="text-xl font-bold">B</span>
-              </div>
-              <span className="font-bold">Beneficios</span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Tu plataforma de beneficios y descuentos exclusivos.
+    <footer className="border-t border-[var(--nexo-deep)]/10 bg-[var(--nexo-ink)] text-white">
+      <div className="container py-14">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
+          <div className="space-y-4 md:col-span-1">
+            <NexoLogo variant="light" markClassName="h-9 w-9" wordmarkClassName="text-2xl text-white" />
+            <p className="max-w-xs text-sm leading-relaxed text-white/65">
+              Salud, telemedicina y beneficios para todo el país. Un solo nexo con tu bienestar.
             </p>
           </div>
 
-          {/* Columna 2 - Enlaces rápidos */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold">Enlaces Rápidos</h3>
-            <ul className="space-y-2 text-sm">
+            <h3 className="mb-4 font-display text-sm font-semibold tracking-wide text-white">Explorar</h3>
+            <ul className="space-y-2.5 text-sm text-white/65">
               <li>
-                <Link href="/beneficios" className="text-muted-foreground hover:text-foreground">
+                <Link href="/#servicios" className="transition hover:text-[var(--nexo-aqua)]">
+                  Servicios
+                </Link>
+              </li>
+              <li>
+                <Link href="/beneficios" className="transition hover:text-[var(--nexo-aqua)]">
                   Beneficios
                 </Link>
               </li>
               <li>
-                <Link href="/credencial" className="text-muted-foreground hover:text-foreground">
-                  Mi Credencial
-                </Link>
-              </li>
-              <li>
-                <Link href="/telemedicina" className="text-muted-foreground hover:text-foreground">
+                <Link href="/telemedicina" className="transition hover:text-[var(--nexo-aqua)]">
                   Telemedicina
                 </Link>
               </li>
               <li>
-                <Link href="/registro" className="text-muted-foreground hover:text-foreground">
+                <Link href="/credencial" className="transition hover:text-[var(--nexo-aqua)]">
+                  Mi Credencial
+                </Link>
+              </li>
+              <li>
+                <Link href="/registro" className="transition hover:text-[var(--nexo-aqua)]">
                   Registrarse
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Columna 3 - Contacto */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold">Contacto</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li className="flex items-center space-x-2">
-                <Mail className="h-4 w-4" />
-                <span>info@beneficios.com</span>
+            <h3 className="mb-4 font-display text-sm font-semibold tracking-wide text-white">Contacto</h3>
+            <ul className="space-y-3 text-sm text-white/65">
+              <li className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-[var(--nexo-aqua)]" />
+                <span>hola@nexo.ar</span>
               </li>
-              <li className="flex items-center space-x-2">
-                <Phone className="h-4 w-4" />
-                <span>+54 11 4444-5555</span>
+              <li className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-[var(--nexo-aqua)]" />
+                <span>+54 11 4379-5506</span>
               </li>
             </ul>
           </div>
 
-          {/* Columna 4 - Redes sociales */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold">Síguenos</h3>
-            <div className="flex space-x-4">
-              <a
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-                aria-label="Facebook"
-              >
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-                aria-label="Twitter"
-              >
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a
-                href="#"
-                className="text-muted-foreground hover:text-foreground"
-                aria-label="Instagram"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
-            </div>
+            <h3 className="mb-4 font-display text-sm font-semibold tracking-wide text-white">Seguinos</h3>
+            <a
+              href="#"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-[var(--nexo-teal)]"
+              aria-label="Instagram"
+            >
+              <Instagram className="h-5 w-5" />
+            </a>
           </div>
         </div>
 
-        <div className="mt-8 border-t pt-8">
-          <div className="flex flex-col items-center justify-between gap-4 text-center text-sm text-muted-foreground sm:flex-row">
-            <p>© {new Date().getFullYear()} Beneficios. Todos los derechos reservados.</p>
-            <Link
-              href="/login"
-              className="text-xs text-muted-foreground/70 hover:text-foreground transition-colors"
-            >
-              Acceso personal
-            </Link>
-          </div>
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-center text-sm text-white/45 sm:flex-row sm:text-left">
+          <p>© {new Date().getFullYear()} nexo. Todos los derechos reservados.</p>
+          <Link href="/login" className="text-xs text-white/35 transition hover:text-white/70">
+            Acceso personal
+          </Link>
         </div>
       </div>
     </footer>

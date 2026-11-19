@@ -1,7 +1,5 @@
 import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Star } from 'lucide-react'
 import type { Benefit, Category, BenefitCategory } from '@prisma/client'
 
 interface BenefitCardProps {
@@ -14,43 +12,41 @@ interface BenefitCardProps {
 
 export function BenefitCard({ benefit }: BenefitCardProps) {
   return (
-    <Link href={`/beneficios/${benefit.slug}`}>
-      <Card className="group h-full overflow-hidden transition-all hover:shadow-lg">
-        {benefit.imagenUrl && (
-          <div className="relative h-48 w-full overflow-hidden bg-muted">
-            <img
-              src={benefit.imagenUrl}
-              alt={benefit.titulo}
-              className="h-full w-full object-cover transition-transform group-hover:scale-105"
-            />
-            {/* {benefit.destacado && (
-              <div className="absolute right-2 top-2">
-                <Badge variant="default" className="gap-1 bg-[#00438A] text-white">
-                  <Star className="h-3 w-3 fill-current" />
-                  Destacado
-                </Badge>
-              </div>
-            )} */}
+    <Link
+      href={`/beneficios/${benefit.slug}`}
+      className="group block overflow-hidden bg-white/80 transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-lg hover:shadow-[var(--nexo-teal)]/10"
+    >
+      {benefit.imagenUrl && (
+        <div className="relative h-48 w-full overflow-hidden bg-[var(--nexo-mint)]">
+          <img
+            src={benefit.imagenUrl}
+            alt={benefit.titulo}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute left-0 top-0 h-1 w-full bg-[var(--nexo-aqua)]" />
+        </div>
+      )}
+      <div className="p-5">
+        <h3 className="font-display line-clamp-2 text-lg font-semibold text-[var(--nexo-ink)]">
+          {benefit.titulo}
+        </h3>
+        {benefit.categories && benefit.categories.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {benefit.categories.map((bc) => (
+              <Badge
+                key={bc.id}
+                variant="outline"
+                className="w-fit border-[var(--nexo-teal)]/30 bg-[var(--nexo-mint)] text-[var(--nexo-deep)]"
+              >
+                {bc.category.nombre}
+              </Badge>
+            ))}
           </div>
         )}
-        <CardHeader>
-          <div className="flex items-start justify-between gap-2">
-            <CardTitle className="line-clamp-2 text-lg">{benefit.titulo}</CardTitle>
-          </div>
-          {benefit.categories && benefit.categories.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {benefit.categories.map((bc) => (
-                <Badge key={bc.id} variant="outline" className="w-fit bg-[#00438A] text-white">
-                  {bc.category.nombre}
-                </Badge>
-              ))}
-            </div>
-          )}
-        </CardHeader>
-        <CardContent>
-          <CardDescription className="line-clamp-3">{benefit.descripcion}</CardDescription>
-        </CardContent>
-      </Card>
+        <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-[var(--nexo-deep)]/70">
+          {benefit.descripcion}
+        </p>
+      </div>
     </Link>
   )
 }

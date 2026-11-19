@@ -1,0 +1,18 @@
+<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="nexoA" x1="8" y1="56" x2="40" y2="8" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B4F5C"/>
+      <stop offset="1" stop-color="#2EC4B6"/>
+    </linearGradient>
+    <linearGradient id="nexoB" x1="24" y1="56" x2="56" y2="8" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#14919B"/>
+      <stop offset="1" stop-color="#5EEAD4"/>
+    </linearGradient>
+  </defs>
+  <!-- Left stem of N -->
+  <path d="M14 52V16c0-2.2 1.8-4 4-4h2.5c1.5 0 2.9.8 3.6 2.1L40 42V16c0-2.2 1.8-4 4-4h2c2.2 0 4 1.8 4 4v36c0 2.2-1.8 4-4 4h-2.5c-1.5 0-2.9-.8-3.6-2.1L24 26v26c0 2.2-1.8 4-4 4h-2c-2.2 0-4-1.8-4-4z" fill="url(#nexoA)" opacity="0"/>
+  <!-- Redesigned interlocking ribbons forming n -->
+  <path d="M12 48c0-14 8-24 18-24 2.8 0 5.4.8 7.6 2.2" stroke="url(#nexoA)" stroke-width="10" stroke-linecap="round"/>
+  <path d="M52 16c0 14-8 24-18 24-2.8 0-5.4-.8-7.6-2.2" stroke="url(#nexoB)" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="32" cy="32" r="4" fill="#2EC4B6"/>
+</svg>

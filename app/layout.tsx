@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import localFont from 'next/font/local'
+import { Outfit, Figtree } from 'next/font/google'
 // @ts-ignore
 import './globals.css'
 import { Navbar } from '@/components/layout/navbar'
@@ -7,41 +7,25 @@ import { Footer } from '@/components/layout/footer'
 import { Toaster } from '@/components/ui/toaster'
 import { headers } from 'next/headers'
 
-const inter = localFont({
-  src: [
-    {
-      path: './fonts/Inter-Regular.woff2',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: './fonts/Inter-Medium.woff2',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: './fonts/Inter-SemiBold.woff2',
-      weight: '600',
-      style: 'normal',
-    },
-    {
-      path: './fonts/Inter-Bold.woff2',
-      weight: '700',
-      style: 'normal',
-    },
-    {
-      path: './fonts/Inter-Italic.woff2',
-      weight: '400',
-      style: 'italic',
-    },
-  ],
-  variable: '--font-inter',
+const outfit = Outfit({
+  subsets: ['latin'],
+  variable: '--font-display',
+  display: 'swap',
+})
+
+const figtree = Figtree({
+  subsets: ['latin'],
+  variable: '--font-sans',
   display: 'swap',
 })
 
 export const metadata: Metadata = {
-  title: 'Beneficios - Tu plataforma de descuentos y ventajas',
-  description: 'Accedé a descuentos exclusivos en salud, gastronomía, educación, deportes y más.',
+  title: 'nexo — Salud, telemedicina y beneficios en Argentina',
+  description:
+    'Telemedicina con especialidades e inclusión, asesoría legal, descuentos en comercios, cursos, farmacias y turismo. Para todo el país.',
+  icons: {
+    icon: '/nexo-mark.svg',
+  },
 }
 
 export default async function RootLayout({
@@ -55,7 +39,10 @@ export default async function RootLayout({
 
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${inter.className} antialiased`} suppressHydrationWarning>
+      <body
+        className={`${outfit.variable} ${figtree.variable} ${figtree.className} antialiased`}
+        suppressHydrationWarning
+      >
         <div className="flex min-h-screen flex-col">
           {!isAdminRoute && <Navbar />}
           <main className="flex-1">{children}</main>

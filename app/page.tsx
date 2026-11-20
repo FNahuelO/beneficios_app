@@ -123,12 +123,8 @@ export default async function HomePage() {
         </div>
 
         <div className="container relative flex min-h-[100svh] flex-col justify-center py-24 md:py-28">
-          <div className="nexo-animate-in nexo-float w-full max-w-md md:max-w-lg">
-            <NexoLogo
-              height={150}
-              priority
-              className="rounded-2xl shadow-lg shadow-black/25"
-            />
+          <div className="nexo-animate-in nexo-float w-full max-w-xl">
+            <NexoLogo height={96} variant="full" light priority />
           </div>
 
           <h1 className="nexo-animate-in nexo-animate-in-delay-1 font-display mt-8 max-w-2xl text-2xl font-semibold leading-snug tracking-tight text-white/95 sm:text-3xl md:text-4xl">
@@ -296,7 +292,7 @@ export default async function HomePage() {
           }}
         />
         <div className="container relative text-center">
-          <NexoLogo height={72} className="mx-auto justify-center rounded-xl shadow-md" />
+          <NexoLogo height={56} variant="full" light className="mx-auto justify-center" />
           <h2 className="font-display mx-auto mt-6 max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
             Empezá a disfrutar nexo hoy
           </h2>

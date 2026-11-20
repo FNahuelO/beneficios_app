@@ -63,7 +63,7 @@ export function AdminSidebar() {
     <div className="flex h-full flex-col border-r bg-muted/10">
       <div className="p-6">
         <Link href="/admin" className="flex items-center">
-          <NexoLogo height={36} />
+          <NexoLogo height={32} variant="wordmark" />
         </Link>
       </div>
 

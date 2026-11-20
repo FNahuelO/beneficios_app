@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   description:
     'Telemedicina con especialidades e inclusión, asesoría legal, descuentos en comercios, cursos, farmacias y turismo. Para todo el país.',
   icons: {
-    icon: '/nexo-mark.png',
+    icon: '/nexo-isotipo.png',
   },
 }
 

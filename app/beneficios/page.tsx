@@ -1,9 +1,26 @@
+import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
 import { BenefitCard } from '@/components/beneficios/benefit-card'
 import { BeneficiosFilters } from '@/components/beneficios/beneficios-filters'
 import { Badge } from '@/components/ui/badge'
+import { JsonLd } from '@/components/seo/json-ld'
+import { breadcrumbJsonLd, buildMetadata, offerCatalogJsonLd } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = buildMetadata({
+  title: 'Beneficios',
+  path: '/beneficios',
+  description:
+    'Explorá descuentos y beneficios exclusivos de nexo: farmacias, comercios, cursos, turismo y más en toda Argentina.',
+  keywords: [
+    'beneficios nexo',
+    'descuentos Argentina',
+    'descuentos farmacias',
+    'comercios adheridos',
+    'beneficios salud',
+  ],
+})
 
 interface BeneficiosPageProps {
   searchParams: Promise<{
@@ -76,6 +93,21 @@ export default async function BeneficiosPage({ searchParams }: BeneficiosPagePro
 
   return (
     <div className="min-h-screen">
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: 'Inicio', path: '/' },
+            { name: 'Beneficios', path: '/beneficios' },
+          ]),
+          offerCatalogJsonLd(
+            beneficios.map((b) => ({
+              titulo: b.titulo,
+              slug: b.slug,
+              descripcion: b.descripcion,
+            }))
+          ),
+        ]}
+      />
       <section className="relative overflow-hidden bg-[var(--nexo-ink)] text-white">
         <div
           className="pointer-events-none absolute inset-0 opacity-40"

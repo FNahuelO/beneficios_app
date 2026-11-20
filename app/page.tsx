@@ -1,8 +1,11 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import type { Metadata } from 'next'
 import { NexoLogo } from '@/components/brand/nexo-logo'
 import { prisma } from '@/lib/prisma'
 import { BenefitCard } from '@/components/beneficios/benefit-card'
+import { JsonLd } from '@/components/seo/json-ld'
+import { buildMetadata, breadcrumbJsonLd } from '@/lib/seo'
 import {
   Stethoscope,
   Accessibility,
@@ -17,6 +20,12 @@ import {
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = buildMetadata({
+  path: '/',
+  description:
+    'nexo conecta telemedicina, asesoría legal y beneficios en comercios, cursos, farmacias y turismo para todo el país. Sumate y activá tu credencial digital.',
+})
 
 const servicios = [
   {
@@ -94,6 +103,7 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col">
+      <JsonLd data={breadcrumbJsonLd([{ name: 'Inicio', path: '/' }])} />
       {/* Hero — una sola composición */}
       <section className="relative min-h-[100svh] overflow-hidden text-white">
         <div className="absolute inset-0">
@@ -123,8 +133,8 @@ export default async function HomePage() {
         </div>
 
         <div className="container relative flex min-h-[100svh] flex-col justify-center py-24 md:py-28">
-          <div className="nexo-animate-in nexo-float w-full max-w-xl">
-            <NexoLogo height={96} variant="full" light priority />
+          <div className="nexo-animate-in nexo-float w-full max-w-md md:max-w-lg">
+            <NexoLogo height={150} priority onDark className="rounded-2xl shadow-lg shadow-black/25" />
           </div>
 
           <h1 className="nexo-animate-in nexo-animate-in-delay-1 font-display mt-8 max-w-2xl text-2xl font-semibold leading-snug tracking-tight text-white/95 sm:text-3xl md:text-4xl">
@@ -292,7 +302,7 @@ export default async function HomePage() {
           }}
         />
         <div className="container relative text-center">
-          <NexoLogo height={56} variant="full" light className="mx-auto justify-center" />
+          <NexoLogo height={72} onDark className="mx-auto justify-center" />
           <h2 className="font-display mx-auto mt-6 max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
             Empezá a disfrutar nexo hoy
           </h2>

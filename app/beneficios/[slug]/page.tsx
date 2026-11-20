@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { Badge } from '@/components/ui/badge'
@@ -5,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { ArrowLeft, Star } from 'lucide-react'
 import Link from 'next/link'
+import { JsonLd } from '@/components/seo/json-ld'
+import { absoluteUrl, breadcrumbJsonLd, buildMetadata } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,6 +15,49 @@ interface BenefitDetailPageProps {
   params: Promise<{
     slug: string
   }>
+}
+
+export async function generateMetadata({
+  params,
+}: BenefitDetailPageProps): Promise<Metadata> {
+  const { slug } = await params
+
+  try {
+    const beneficio = await prisma.benefit.findUnique({
+      where: { slug },
+      select: {
+        titulo: true,
+        descripcion: true,
+        imagenUrl: true,
+        slug: true,
+      },
+    })
+
+    if (!beneficio) {
+      return buildMetadata({
+        title: 'Beneficio no encontrado',
+        path: `/beneficios/${slug}`,
+        noIndex: true,
+      })
+    }
+
+    const description =
+      beneficio.descripcion?.slice(0, 160) ||
+      `Conocé el beneficio ${beneficio.titulo} disponible para socios nexo en Argentina.`
+
+    return buildMetadata({
+      title: beneficio.titulo,
+      description,
+      path: `/beneficios/${beneficio.slug}`,
+      image: beneficio.imagenUrl || '/nexo-logo.png',
+      keywords: [beneficio.titulo, 'beneficio nexo', 'descuento', 'Argentina'],
+    })
+  } catch {
+    return buildMetadata({
+      title: 'Beneficios',
+      path: `/beneficios/${slug}`,
+    })
+  }
 }
 
 export default async function BenefitDetailPage({ params }: BenefitDetailPageProps) {
@@ -32,8 +78,33 @@ export default async function BenefitDetailPage({ params }: BenefitDetailPagePro
     notFound()
   }
 
+  const offerJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Offer',
+    name: beneficio.titulo,
+    description: beneficio.descripcion || undefined,
+    url: absoluteUrl(`/beneficios/${beneficio.slug}`),
+    image: beneficio.imagenUrl || absoluteUrl('/nexo-logo.png'),
+    category: beneficio.categories.map((bc) => bc.category.nombre).join(', ') || undefined,
+    seller: {
+      '@type': 'Organization',
+      name: 'nexo Salud y Beneficios',
+    },
+    areaServed: 'AR',
+  }
+
   return (
     <div className="container py-8">
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: 'Inicio', path: '/' },
+            { name: 'Beneficios', path: '/beneficios' },
+            { name: beneficio.titulo, path: `/beneficios/${beneficio.slug}` },
+          ]),
+          offerJsonLd,
+        ]}
+      />
       <Button variant="ghost" asChild className="mb-6">
         <Link href="/beneficios">
           <ArrowLeft className="mr-2 h-4 w-4" />

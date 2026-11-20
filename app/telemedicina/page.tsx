@@ -1,10 +1,27 @@
+import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
 import { Button } from '@/components/ui/button'
 import { Clock3, Headset, Phone, Accessibility, Stethoscope } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { JsonLd } from '@/components/seo/json-ld'
+import { breadcrumbJsonLd, buildMetadata, medicalBusinessJsonLd } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = buildMetadata({
+  title: 'Telemedicina',
+  path: '/telemedicina',
+  description:
+    'Telemedicina nexo con especialidades e inclusión, las 24 horas. Consultá con profesionales a distancia en toda Argentina.',
+  keywords: [
+    'telemedicina Argentina',
+    'consulta médica online',
+    'médico a distancia',
+    'especialidades médicas',
+    'nexo telemedicina',
+  ],
+})
 
 export default async function TelemedicinaPage() {
   let settings = null
@@ -63,6 +80,15 @@ export default async function TelemedicinaPage() {
 
   return (
     <div className="min-h-screen">
+      <JsonLd
+        data={[
+          breadcrumbJsonLd([
+            { name: 'Inicio', path: '/' },
+            { name: 'Telemedicina', path: '/telemedicina' },
+          ]),
+          medicalBusinessJsonLd(),
+        ]}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden bg-[var(--nexo-ink)] text-white">
         <div

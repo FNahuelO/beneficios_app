@@ -1,11 +1,17 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Outfit, Figtree } from 'next/font/google'
 // @ts-ignore
 import './globals.css'
-import { Navbar } from '@/components/layout/navbar'
-import { Footer } from '@/components/layout/footer'
+import { SiteChrome } from '@/components/layout/site-chrome'
 import { Toaster } from '@/components/ui/toaster'
-import { headers } from 'next/headers'
+import { JsonLd } from '@/components/seo/json-ld'
+import {
+  buildMetadata,
+  getSiteUrl,
+  organizationJsonLd,
+  siteConfig,
+  websiteJsonLd,
+} from '@/lib/seo'
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -19,35 +25,55 @@ const figtree = Figtree({
   display: 'swap',
 })
 
+const baseMetadata = buildMetadata()
+
 export const metadata: Metadata = {
-  title: 'nexo — Salud, telemedicina y beneficios en Argentina',
-  description:
-    'Telemedicina con especialidades e inclusión, asesoría legal, descuentos en comercios, cursos, farmacias y turismo. Para todo el país.',
+  ...baseMetadata,
+  metadataBase: new URL(getSiteUrl()),
+  title: {
+    default: `${siteConfig.name} — ${siteConfig.tagline}`,
+    template: `%s | ${siteConfig.name}`,
+  },
   icons: {
-    icon: '/nexo-isotipo.png',
+    icon: [{ url: '/nexo-mark.png', type: 'image/png' }],
+    shortcut: '/nexo-mark.png',
+    apple: [{ url: '/nexo-mark.png', type: 'image/png' }],
+  },
+  appleWebApp: {
+    capable: true,
+    title: siteConfig.name,
+    statusBarStyle: 'default',
+  },
+  formatDetection: {
+    telephone: true,
+    email: true,
+    address: false,
   },
 }
 
-export default async function RootLayout({
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#EFF7FE' },
+    { media: '(prefers-color-scheme: dark)', color: '#0A2A32' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
+
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const headersList = await headers()
-  const pathname = headersList.get('x-pathname') || ''
-  const isAdminRoute = pathname.startsWith('/admin')
-
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es-AR" suppressHydrationWarning>
       <body
         className={`${outfit.variable} ${figtree.variable} ${figtree.className} antialiased`}
         suppressHydrationWarning
       >
-        <div className="flex min-h-screen flex-col">
-          {!isAdminRoute && <Navbar />}
-          <main className="flex-1">{children}</main>
-          {!isAdminRoute && <Footer />}
-        </div>
+        <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
+        <SiteChrome>{children}</SiteChrome>
         <Toaster />
       </body>
     </html>

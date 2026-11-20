@@ -1,0 +1,218 @@
+{
+  "common": {
+    "appName": "Beneficios",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "close": "Cerrar",
+    "confirm": "Confirmar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "submit": "Enviar",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "nav": {
+    "home": "Inicio",
+    "benefits": "Beneficios",
+    "credential": "Mi Credencial",
+    "telemedicine": "Telemedicina",
+    "register": "Registrarse",
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión"
+  },
+  "home": {
+    "hero": {
+      "title": "Tus Beneficios,",
+      "subtitle": "Tu Estilo",
+      "description": "Descuentos exclusivos en salud, gastronomía, educación, deportes y mucho más. Registrate y empezá a disfrutar de todos los beneficios.",
+      "registerButton": "Registrate",
+      "viewBenefitsButton": "Ver Beneficios"
+    },
+    "features": {
+      "title": "¿Por qué elegir Beneficios?",
+      "subtitle": "Todo lo que necesitás para aprovechar al máximo tus descuentos y ventajas exclusivas",
+      "exclusiveDiscounts": {
+        "title": "Descuentos Exclusivos",
+        "description": "Accedé a ofertas especiales en cientos de comercios adheridos."
+      },
+      "digitalCredential": {
+        "title": "Credencial Digital",
+        "description": "Tu credencial siempre disponible en tu celular."
+      },
+      "healthWellness": {
+        "title": "Salud y Bienestar",
+        "description": "Beneficios en medicina, odontología, gimnasios y más."
+      },
+      "secureReliable": {
+        "title": "Seguro y Confiable",
+        "description": "Tu información protegida con los más altos estándares."
+      }
+    },
+    "featuredBenefits": {
+      "title": "Beneficios Destacados",
+      "viewAll": "Ver todos los beneficios"
+    },
+    "unite": {
+      "title": "UNITE",
+      "description": "Empezá a disfrutar de experiencias exclusivas pensadas para vos",
+      "registerButton": "Registrarte"
+    },
+    "cta": {
+      "title": "Unite a miles de usuarios que ya disfrutan de sus beneficios",
+      "description": "Consultá tu credencial y descubrí todos los descuentos disponibles",
+      "registerButton": "Registrarte"
+    }
+  },
+  "footer": {
+    "description": "Tu plataforma de beneficios y descuentos exclusivos.",
+    "quickLinks": "Enlaces Rápidos",
+    "contact": "Contacto",
+    "followUs": "Síguenos",
+    "rights": "Todos los derechos reservados.",
+    "personalAccess": "Acceso personal"
+  },
+  "register": {
+    "title": "Registro",
+    "subtitle": "Completá tus datos para registrarte",
+    "form": {
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "documentType": "Tipo de Documento",
+      "documentNumber": "Número de Documento",
+      "phone": "Teléfono",
+      "email": "Email",
+      "address": "Dirección",
+      "city": "Ciudad",
+      "province": "Provincia",
+      "country": "País",
+      "submit": "Continuar",
+      "cardTitle": "Información de Pago",
+      "cardDescription": "Completá los datos de tu tarjeta para finalizar el registro",
+      "cardNumber": "Número de Tarjeta",
+      "cardHolder": "Nombre del Titular",
+      "expiryDate": "Fecha de Vencimiento",
+      "cvv": "CVV",
+      "amount": "Monto",
+      "payButton": "Pagar y Finalizar Registro"
+    },
+    "success": {
+      "title": "Registro exitoso",
+      "description": "Ahora completa el pago para finalizar tu registro"
+    },
+    "paymentSuccess": {
+      "title": "Pago exitoso",
+      "description": "Tu registro ha sido completado exitosamente"
+    },
+    "paymentError": {
+      "title": "Error en el pago",
+      "description": "Hubo un error al procesar el pago. Por favor, intentá nuevamente."
+    },
+    "info": {
+      "securePayment": "Pago Seguro",
+      "secureDescription": "Tu información está protegida con encriptación de nivel bancario",
+      "cardAccepted": "Tarjetas Aceptadas",
+      "cardDescription": "Aceptamos todas las principales tarjetas de crédito y débito"
+    }
+  },
+  "validation": {
+    "required": "Este campo es requerido",
+    "email": "Email inválido",
+    "minLength": "Debe tener al menos {min} caracteres",
+    "maxLength": "Debe tener como máximo {max} caracteres",
+    "invalidDocument": "Documento inválido",
+    "invalidPhone": "Teléfono inválido",
+    "invalidAddress": "Domicilio inválido",
+    "invalidCity": "Ciudad inválida",
+    "invalidProvince": "Provincia inválida",
+    "invalidCountry": "País inválido",
+    "invalidCardNumber": "El número de tarjeta debe tener entre 16 y 19 dígitos",
+    "invalidExpiryDate": "Formato inválido (MM/AA)",
+    "invalidCvv": "CVV inválido",
+    "passwordMinLength": "La contraseña debe tener al menos 6 caracteres",
+    "nameMinLength": "El nombre debe tener al menos 2 caracteres",
+    "surnameMinLength": "El apellido debe tener al menos 2 caracteres",
+    "titleMinLength": "El título debe tener al menos 3 caracteres",
+    "descriptionMinLength": "La descripción debe tener al menos 10 caracteres",
+    "categoryNameMinLength": "El nombre debe tener al menos 2 caracteres",
+    "selectDocumentType": "Debe seleccionar un tipo de documento",
+    "cardNumberRequired": "El número de tarjeta es requerido",
+    "cardHolderMinLength": "El nombre del titular debe tener al menos 3 caracteres",
+    "expiryDateRequired": "La fecha de vencimiento es requerida",
+    "registrationIdRequired": "ID de registro requerido",
+    "invalidUrl": "URL inválida",
+    "commentMinLength": "El comentario debe tener al menos 10 caracteres",
+    "messageMinLength": "El mensaje debe tener al menos 10 caracteres"
+  },
+  "api": {
+    "error": "Error al procesar la solicitud",
+    "invalidData": "Datos inválidos",
+    "userExists": "Ya existe un usuario con ese email",
+    "requestExists": "Ya existe una solicitud con ese documento",
+    "registrationSuccess": "Registro completado. Por favor, completa el pago para finalizar.",
+    "paymentError": "Error al procesar el pago",
+    "unauthorized": "No autorizado",
+    "notFound": "No encontrado",
+    "serverError": "Error del servidor"
+  },
+  "credential": {
+    "title": "Mi Credencial",
+    "subtitle": "Consultá tu credencial ingresando tus datos",
+    "form": {
+      "document": "Documento",
+      "email": "Email",
+      "consult": "Consultar",
+      "download": "Descargar PDF",
+      "qrCode": "Código QR",
+      "qrExpired": "QR expirado",
+      "qrExpiredDescription": "El código QR ha expirado. Consultá nuevamente para generar uno nuevo.",
+      "qrExpiresIn": "Expira en",
+      "validUntil": "Válido hasta",
+      "notFound": "Credencial no encontrada",
+      "notFoundDescription": "No se encontró una credencial con los datos proporcionados.",
+      "error": "Error al consultar la credencial",
+      "pending": "Pendiente de Aprobación",
+      "pendingDescription": "Tu solicitud está siendo revisada. Te notificaremos cuando sea aprobada.",
+      "rejected": "Solicitud Rechazada",
+      "rejectedDescription": "Tu solicitud ha sido rechazada. Verificá los datos e intentá nuevamente.",
+      "adminComment": "Comentario del Administrador",
+      "status": "Estado"
+    }
+  },
+  "telemedicine": {
+    "title": "Telemedicina",
+    "contactInfo": "Información de Contacto",
+    "mainPhone": "Teléfono Principal",
+    "infoMessage": "Mensaje Informativo"
+  },
+  "benefits": {
+    "title": "Beneficios",
+    "all": "Todos",
+    "noBenefits": "No se encontraron beneficios",
+    "filters": "Filtros",
+    "categories": "Categorías",
+    "viewDetails": "Ver Detalles",
+    "howToUse": "Cómo usar",
+    "description": "Descripción"
+  },
+  "admin": {
+    "dashboard": "Panel de Administración",
+    "users": "Usuarios",
+    "benefits": "Beneficios",
+    "categories": "Categorías",
+    "specialties": "Especialidades",
+    "settings": "Ajustes",
+    "telemedicine": "Telemedicina",
+    "registrations": "Solicitudes de Registro",
+    "stats": "Estadísticas",
+    "payments": "Pagos"
+  }
+}

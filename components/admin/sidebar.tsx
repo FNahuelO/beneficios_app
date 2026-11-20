@@ -61,9 +61,9 @@ export function AdminSidebar() {
 
   return (
     <div className="flex h-full flex-col border-r bg-muted/10">
-      <div className="p-6">
-        <Link href="/admin" className="flex items-center">
-          <NexoLogo height={32} variant="wordmark" />
+      <div className="border-b border-[var(--nexo-deep)]/10 px-5 py-5">
+        <Link href="/admin" className="flex items-center" aria-label="nexo admin">
+          <NexoLogo height={44} />
         </Link>
       </div>
 

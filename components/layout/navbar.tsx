@@ -7,6 +7,7 @@ import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { NexoLogo } from '@/components/brand/nexo-logo'
+import { NexoMark } from '@/components/brand/nexo-mark'
 
 export function Navbar() {
   const pathname = usePathname()
@@ -25,7 +26,8 @@ export function Navbar() {
       <div className="container flex h-16 items-center">
         <div className="mr-8 flex items-center">
           <Link href="/" className="flex items-center" aria-label="nexo inicio">
-            <NexoLogo height={36} variant="wordmark" priority />
+            <NexoLogo height={44} priority className="hidden sm:inline-flex" />
+            <NexoMark size={40} priority className="sm:hidden" />
           </Link>
         </div>
 

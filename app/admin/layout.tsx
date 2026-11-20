@@ -1,7 +1,16 @@
+import type { Metadata } from 'next'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { AdminSidebar } from '@/components/admin/sidebar'
 import { SessionProvider } from 'next-auth/react'
+import { buildMetadata } from '@/lib/seo'
+
+export const metadata: Metadata = buildMetadata({
+  title: 'Admin',
+  path: '/admin',
+  description: 'Panel de administración nexo.',
+  noIndex: true,
+})
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()

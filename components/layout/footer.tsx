@@ -8,7 +8,7 @@ export function Footer() {
       <div className="container py-14">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
           <div className="space-y-4 md:col-span-1">
-            <NexoLogo height={48} variant="full" light />
+            <NexoLogo height={56} onDark />
             <p className="max-w-xs text-sm leading-relaxed text-white/65">
               Salud, telemedicina y beneficios para todo el país. Un solo nexo con tu bienestar.
             </p>

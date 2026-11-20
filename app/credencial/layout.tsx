@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { buildMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = buildMetadata({
@@ -10,5 +11,5 @@ export const metadata: Metadata = buildMetadata({
 })
 
 export default function CredencialLayout({ children }: { children: React.ReactNode }) {
-  return children
+  return <Suspense fallback={null}>{children}</Suspense>
 }

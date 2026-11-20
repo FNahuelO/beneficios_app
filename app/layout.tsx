@@ -5,6 +5,7 @@ import './globals.css'
 import { SiteChrome } from '@/components/layout/site-chrome'
 import { Toaster } from '@/components/ui/toaster'
 import { JsonLd } from '@/components/seo/json-ld'
+import { PwaProvider } from '@/components/pwa/pwa-provider'
 import {
   buildMetadata,
   getSiteUrl,
@@ -35,14 +36,22 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.name}`,
   },
   icons: {
-    icon: [{ url: '/nexo-mark.png', type: 'image/png' }],
-    shortcut: '/nexo-mark.png',
-    apple: [{ url: '/nexo-mark.png', type: 'image/png' }],
+    icon: [
+      { url: '/icons/icon-16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/icons/icon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    shortcut: '/icons/icon-192.png',
+    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
   appleWebApp: {
     capable: true,
     title: siteConfig.name,
-    statusBarStyle: 'default',
+    statusBarStyle: 'black-translucent',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
   },
   formatDetection: {
     telephone: true,
@@ -74,6 +83,7 @@ export default function RootLayout({
       >
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         <SiteChrome>{children}</SiteChrome>
+        <PwaProvider />
         <Toaster />
       </body>
     </html>

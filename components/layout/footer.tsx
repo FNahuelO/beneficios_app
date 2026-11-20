@@ -1,8 +1,14 @@
+'use client'
+
 import Link from 'next/link'
-import { Instagram, Mail, Phone } from 'lucide-react'
+import { Download, Instagram, Mail, Phone } from 'lucide-react'
 import { NexoLogo } from '@/components/brand/nexo-logo'
 
 export function Footer() {
+  const showInstallHelp = () => {
+    window.dispatchEvent(new Event('nexo:show-pwa-install'))
+  }
+
   return (
     <footer className="border-t border-[var(--nexo-deep)]/10 bg-[var(--nexo-ink)] text-white">
       <div className="container py-14">
@@ -12,6 +18,14 @@ export function Footer() {
             <p className="max-w-xs text-sm leading-relaxed text-white/65">
               Salud, telemedicina y beneficios para todo el país. Un solo nexo con tu bienestar.
             </p>
+            <button
+              type="button"
+              onClick={showInstallHelp}
+              className="inline-flex items-center gap-2 text-sm font-medium text-[var(--nexo-aqua)] transition hover:text-white"
+            >
+              <Download className="h-4 w-4" />
+              Instalar app
+            </button>
           </div>
 
           <div>
